@@ -1,4 +1,4 @@
 #!/bin/bash
 python manage.py makemigrations
 python manage.py migrate
-python manage.py search_index --rebuild
+echo "y" | python manage.py search_index --rebuild
