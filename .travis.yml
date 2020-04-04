@@ -12,7 +12,7 @@ before_install:
   - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
   - sudo service postgresql restart 11
 addons:
-  postgresql: "11.2"
+  postgresql: '11.2'
 services:
   - postgresql
 install:
@@ -26,13 +26,14 @@ before_script:
 script:
   - python manage.py test
 deploy:
-  provider: codedeploy
-  access_key_id: "YOUR AWS ACCESS KEY"
-  secret_access_key: "YOUR AWS SECRET KEY"
-  bucket: "dreamcollabbucket"
-  key: latest/MyApp
-  application: MyApp
-  deployment_group: MyDeploymentGroup
+  provider: heroku
+  api_key:
+    secure: M7cOaUC+XjXT/DSY5ec9jaEUhSy53tigpEhxZMoeHSjC61/+vcQgz9QmpOP5eWCKSSoVMkE/6aqVBPJ9WBvVvq2TbPdcYO6Fj5ZIV2q6F2r+jxn7MqnLaeLQ/WDMfzUigjEBerG3zUAP+62tszeOwwADW+wdTNJsJLy9exat2gEaf86sH1asnYmWqwRmJY5EbcNU2TFMLSPDs6tgY3MOM7rMY+fEoBEFxNzdgUl8Zu8rS/QPziLKSgUB7C5OmJ/5G4iXhS0Px9WFm7/3zbRQ89xB/uSa/1FZ5M30xbANkPrzXO9xO8G/2TnNA5MthzRDsbfKLzIKh4ghthFG1Rm2lHtPEEZjOAz3R9g5XZxAB1ZoEJDlzytZJnguAxc+keBiPDNZAQ76BtgdeDdqkj3kx/wnGkgdVgtPUdcTrqpAk7VEsEQjFUqUz/HMjLu3K0o81Bk+UulEEhSQGntY9lI/dDAa9p57rqZjSxwbBZsTm9/ZLZeH3mJyRRHpCF0LD+/jZ5Ac9QHJf/cHpskFbE4Ot5XrAextdyEIFdyGTlXMi6SpBP7OkFBQugq6mTlbbAfJ3qcDsQqVkW8PkDyHoStKNCUBvqfx8/JScqX5Zux9vln7/FvHia+HUYkeW1lfRp1qFiW0/AeutGbhaC3gJxyeFa22OApw2DGDywCjLBBmPUs=
+  app: dreamcollab
+  on:
+    repo: nikita03565/esearch
+    branch: master
   after_deploy:
-    - "python manage.py makemigrations"
-    - "python manage.py migrate"
+    - 'python manage.py makemigrations'
+    - 'python manage.py migrate'
+    - 'python manage.py search_index --rebuild'
