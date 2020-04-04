@@ -2,35 +2,12 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
-  },
+  "dependencies": {},
   "scripts": {
-    "postinstall": "npm install --prefix ./frontend",
-    "start": "react-scripts start  --prefix ./frontend",
-    "build": "react-scripts build  --prefix ./frontend",
-    "test": "react-scripts test  --prefix ./frontend",
-    "eject": "react-scripts eject  --prefix ./frontend"
   },
-  "proxy": "http://127.0.0.1:8000",
-  "eslintConfig": {
-    "extends": "react-app"
-  },
+  "eslintConfig": {},
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "production": [],
+    "development": []
   }
 }
