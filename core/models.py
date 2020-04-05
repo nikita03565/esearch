@@ -1,31 +1,42 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.fields import ArrayField, JSONField
 
 
-class Manufacturer(models.Model):
-    name = models.CharField(_('name'), max_length=100, )
-    country_code = models.CharField(_('country code'), max_length=2, )
-    created = models.DateField(_('created'), )
+class Desire(models.Model):
+    name = models.CharField('name', max_length=100, )
+    description = models.TextField('description', max_length=512, blank=True)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='desires')
 
 
-class Car(models.Model):
-    TYPES = [
-        (1, 'Sedan'),
-        (2, 'Truck'),
-        (3, 'SUV'),
-    ]
-    name = models.CharField(_('name'), max_length=100, )
-    color = models.CharField( _('color'), max_length=30, )
-    description = models.TextField(_('description'), )
-    type = models.IntegerField(_('type'), choices=TYPES, )
-    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, verbose_name=_('manufacturer'), )
+class Friendship(models.Model):
+    STATUSES = (
+        ('S', 'Sent'),
+        ('A', 'Approved'),
+        ('R', 'Rejected'),
+    )
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    updated_at = models.DateTimeField(null=True, blank=True)
+    creator = models.ForeignKey('User', related_name="friendship_creator_set", on_delete=models.CASCADE)
+    friend = models.ForeignKey('User', related_name="friend_set", on_delete=models.CASCADE)
+    status = models.CharField(choices=STATUSES, max_length=1)
+
+
+class User(AbstractUser):
+    PRIVACY_VISIBLE_TO_ALL = 'ALL'
+    PRIVACY_VISIBLE_TO_AUTH = 'AUTH'
+    PRIVACY_VISIBLE_TO_NOBODY = 'NOBODY'
+    PRIVACY_VISIBLE_TO_FRIENDS = 'FRIEND'
+
+    bio = models.CharField(max_length=500, null=True, blank=True)
+    date_of_birth = models.DateField("Date of birth", null=True, blank=True)
+    # calculate age
+    contacts = ArrayField(models.CharField(verbose_name='Contacts', max_length=128, null=True, blank=True), blank=True, null=True)
+
+    privacy_settings = JSONField(null=True, blank=True)
 
     class Meta:
-        verbose_name = _('Car')
-        verbose_name_plural = _('Cars')
+        ordering = ['id']
 
     def __str__(self):
-        return self.name
-
-    def get_auction_title(self):
-        return '{} - {}'.format(self.name, self.color)
+        return self.username
