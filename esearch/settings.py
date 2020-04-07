@@ -126,7 +126,14 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ]
+    ],
+    'DATE_INPUT_FORMATS': (
+        '%d-%m-%Y',
+        '%d/%m/%Y',
+        '%d.%m.%Y',
+    ),
+    'DATE_FORMAT': "%d-%m-%Y",
+    'DATETIME_FORMAT': "%d-%m-%Y %H:%M:%S",
 }
 
 # Internationalization
