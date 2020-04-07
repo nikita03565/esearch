@@ -1,6 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField, JSONField
+from django.db import models
+
 from .utils import phone_regex
 
 
@@ -8,6 +9,9 @@ class Desire(models.Model):
     name = models.CharField('name', max_length=100, )
     description = models.TextField('description', max_length=512, blank=True)
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='desires')
+
+    def __str__(self):
+        return f'{self.user}: {self.name}'
 
 
 class Friendship(models.Model):
@@ -26,20 +30,32 @@ class Friendship(models.Model):
 class Country(models.Model):
     name = models.CharField('name', max_length=100, )
 
+    def __str__(self):
+        return f'{self.name}'
+
 
 class City(models.Model):
     name = models.CharField('name', max_length=100, )
     country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='cities')
+
+    def __str__(self):
+        return f'{self.name}, {self.country}'
 
 
 class District(models.Model):
     name = models.CharField('name', max_length=100, )
     city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='districts')
 
+    def __str__(self):
+        return f'{self.name}, {self.city}'
+
 
 class Street(models.Model):
     name = models.CharField('name', max_length=100, )
     city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='streets')
+
+    def __str__(self):
+        return f'{self.name}, {self.city}'
 
 
 class Location(models.Model):
@@ -49,6 +65,9 @@ class Location(models.Model):
     street = models.ForeignKey(Street, on_delete=models.CASCADE, null=True, blank=True)
     building = models.CharField(max_length=64, null=True, blank=True)
     apartment = models.CharField(max_length=64, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.country}, {self.city}, {self.district}, {self.street}, {self.building}, {self.apartment}'
 
 
 class User(AbstractUser):
