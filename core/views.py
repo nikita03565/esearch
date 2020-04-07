@@ -67,17 +67,66 @@
 #         },
 #     }
 
+from django.contrib.auth import get_user_model
+from django.contrib.auth import logout
+from django.shortcuts import get_object_or_404
+from rest_framework import permissions, viewsets
+from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authentication import TokenAuthentication
-from core import serializers
-from rest_framework.views import APIView
-from rest_framework import permissions
-from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth import logout
-from django.contrib.auth import get_user_model
+from rest_framework.views import APIView
+
+from core import serializers, models
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.UserSerializer
+    queryset = models.User.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+
+class DesireViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.DesireSerializer
+    queryset = models.Desire.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+
+class CountryViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.CountrySerializer
+    queryset = models.Country.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+
+class CityViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.CitySerializer
+    queryset = models.City.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+
+class DistrictViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.DistrictSerializer
+    queryset = models.District.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+
+class StreetViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.StreetSerializer
+    queryset = models.Street.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+
+class LocationViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.LocationSerializer
+    queryset = models.Location.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+
+class FriendshipViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.FriendshipSerializer
+    queryset = models.Friendship.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
 class LoginView(ObtainAuthToken):
