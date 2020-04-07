@@ -1,6 +1,5 @@
 from django.core.validators import RegexValidator
 
-
 phone_regex = RegexValidator(regex=r'^\+?1?\d{11}$', message="Phone number must be entered in the format:"
                                                              " '+78005553535'. 11 digits allowed.")
 privacy_fields_choices = {
