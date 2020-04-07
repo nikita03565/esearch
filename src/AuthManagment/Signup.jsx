@@ -51,67 +51,78 @@ class Signup extends Component {
         return (
             <div >
                 <Navbar />
-                <Card style={{ width: 250, paddingLeft: 10 }}>
-                    <CardContent>
-                        <form onSubmit={this.handleFormSubmit}>
-                            <TextField
-                                name="username"
-                                type="text"
-                                value={username}
-                                
-                                onChange={this.handleChange}
-                                placeholder="Введите юзернейм"
-                                required
-                            />
-                            <TextField
-                                name="first_name"
-                                type="text"
-                                value={first_name}
-                                
-                                onChange={this.handleChange}
-                                placeholder="Введите имя"
-                                required
-                            />
-                            <TextField
-                                name="last_name"
-                                type="text"
-                                value={last_name}
-                                
-                                onChange={this.handleChange}
-                                placeholder="Введите фамилию"
-                                required
-                            />
-                            <TextField
-                                name="password"
-                                value={password}
-                                type="password"
-                                
-                                onChange={this.handleChange}
-                                placeholder="Введите пароль"
-                                required
-                            />
-                            <TextField
-                                name="password2"
-                                value={password2}
-                                type="password"
-                                
-                                onChange={this.handleChange}
-                                placeholder="Повторите пароль"
-                                required
-                            />
-                            <Button
-                                style={{ marginTop: 20 }}
-                                variant="contained"
-                                color="primary"
-                                type="submit"
-                                disabled={password !== password2}
-                            >
-                                Зарегистрироваться
-                            </Button>
-                        </form>
-                        {errorText !== '' ? <p style={{ color: 'red', margin: 0, marginTop: 10 }}>{errorText}</p> : ''}
-                    </CardContent>
-                </Card>
+                <div style={{
+                    width: '100%',
+                    height: '100%',
+                    position: 'fixed',
+                    display: 'flex',
+                    alignItems: 'center',
+                    alignContent: 'center',
+                    justifyContent: 'center',
+                    overflow: 'auto',
+                }}>
+                    <Card style={{ width: 250, paddingLeft: 10 }}>
+                        <CardContent>
+                            <form onSubmit={this.handleFormSubmit}>
+                                <TextField
+                                    name="username"
+                                    type="text"
+                                    value={username}
+                                    
+                                    onChange={this.handleChange}
+                                    placeholder="Введите юзернейм"
+                                    required
+                                />
+                                <TextField
+                                    name="first_name"
+                                    type="text"
+                                    value={first_name}
+                                    
+                                    onChange={this.handleChange}
+                                    placeholder="Введите имя"
+                                    required
+                                />
+                                <TextField
+                                    name="last_name"
+                                    type="text"
+                                    value={last_name}
+                                    
+                                    onChange={this.handleChange}
+                                    placeholder="Введите фамилию"
+                                    required
+                                />
+                                <TextField
+                                    name="password"
+                                    value={password}
+                                    type="password"
+                                    
+                                    onChange={this.handleChange}
+                                    placeholder="Введите пароль"
+                                    required
+                                />
+                                <TextField
+                                    name="password2"
+                                    value={password2}
+                                    type="password"
+                                    
+                                    onChange={this.handleChange}
+                                    placeholder="Повторите пароль"
+                                    required
+                                />
+                                <Button
+                                    style={{ marginTop: 20 }}
+                                    variant="contained"
+                                    color="primary"
+                                    type="submit"
+                                    disabled={password !== password2}
+                                >
+                                    Зарегистрироваться
+                                </Button>
+                            </form>
+                            {errorText !== '' ? <p style={{ color: 'red', margin: 0, marginTop: 10 }}>{errorText}</p> : ''}
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         );
     }

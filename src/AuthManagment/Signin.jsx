@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
     Card, CardContent, Button, TextField,
 } from '@material-ui/core';
@@ -48,41 +48,52 @@ class Signin extends Component {
         console.log('RENDER?')
         const { errorText, username, password } = this.state;
         return (
-            <div >
+            <div>
                 <Navbar />
-                <Card style={{ width: 250, paddingLeft: 10 }}>
-                    <CardContent>
-                        <form onSubmit={this.handleFormSubmit}>
-                            <TextField
-                                name="username"
-                                type="text"
-                                value={username}
-                                
-                                onChange={this.handleChange}
-                                placeholder="Введите юзернейм"
-                                required
-                            />
-                            <TextField
-                                name="password"
-                                value={password}
-                                type="password"
-                                
-                                onChange={this.handleChange}
-                                placeholder="Введите пароль"
-                                required
-                            />
-                            <Button
-                                style={{ marginTop: 20 }}
-                                variant="contained"
-                                color="primary"
-                                type="submit"
-                            >
-                                Вход
-                            </Button>
-                        </form>
-                        {errorText !== '' ? <p style={{ color: 'red', margin: 0, marginTop: 10 }}>{errorText}</p> : ''}
-                    </CardContent>
-                </Card>
+                <div style={{
+                    width: '100%',
+                    height: '100%',
+                    position: 'fixed',
+                    display: 'flex',
+                    alignItems: 'center',
+                    alignContent: 'center',
+                    justifyContent: 'center',
+                    overflow: 'auto',
+                }}>
+                    <Card style={{ width: 250, paddingLeft: 10 }}>
+                        <CardContent>
+                            <form onSubmit={this.handleFormSubmit}>
+                                <TextField
+                                    name="username"
+                                    type="text"
+                                    value={username}
+                                    
+                                    onChange={this.handleChange}
+                                    placeholder="Введите юзернейм"
+                                    required
+                                />
+                                <TextField
+                                    name="password"
+                                    value={password}
+                                    type="password"
+                                    
+                                    onChange={this.handleChange}
+                                    placeholder="Введите пароль"
+                                    required
+                                />
+                                <Button
+                                    style={{ marginTop: 20 }}
+                                    variant="contained"
+                                    color="primary"
+                                    type="submit"
+                                >
+                                    Вход
+                                </Button>
+                            </form>
+                            {errorText !== '' ? <p style={{ color: 'red', margin: 0, marginTop: 10 }}>{errorText}</p> : ''}
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         );
     }
