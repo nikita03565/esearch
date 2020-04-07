@@ -3,12 +3,12 @@ import {
     Card, CardContent, Button, TextField,
 } from '@material-ui/core';
 // import styles from './styles';
-import AuthService from './AuthService';
-import history from './history';
+import AuthService from '../AuthService';
+import history from '../history';
 
-class Login extends Component {
+class Signin extends Component {
     constructor() {
-        console.log('???')
+        console.log('HM???')
         super();
         this.handleChange = this.handleChange.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -22,7 +22,6 @@ class Login extends Component {
 
     componentWillMount() {
         if (this.Auth.loggedIn()) {
-            console.log('A???')
             history.replace('/');
         }
     }
@@ -31,10 +30,9 @@ class Login extends Component {
         const { username, password } = this.state;
         e.preventDefault();
         try {
-            await this.Auth.login(username, password);
+            await this.Auth.signin(username, password);
             history.push('/');
         } catch (err) {
-            console.log(err)
             this.setState({ errorText: JSON.stringify(err.response) });
         }
     }
@@ -88,4 +86,4 @@ class Login extends Component {
     }
 }
 
-export default Login;
+export default Signin;

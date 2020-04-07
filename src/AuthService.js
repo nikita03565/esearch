@@ -4,11 +4,12 @@ import history from './history';
 
 export default class AuthService {
     constructor() {
-        this.login = this.login.bind(this);
+        this.signin = this.signin.bind(this);
+        this.signup = this.signup.bind(this);
         this.getUsername = this.getUsername.bind(this);
     }
 
-    async login(username, password) {
+    async signin(username, password) {
         const csrfToken = Cookies.get('csrftoken');
         axios.defaults.xsrfCookieName = 'csrftoken';
         axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -19,6 +20,29 @@ export default class AuthService {
         const res = await axios({
             method: 'post',
             url: '/api/signin/',
+            data,
+            headers: {
+                'X-CSRFToken': csrfToken,
+            },
+        });
+        this.setToken(res.data.token);
+        this.setUsername(res.data.username);
+        return Promise.resolve(res);
+    }
+
+    async signup(username, password, first_name, last_name) {
+        const csrfToken = Cookies.get('csrftoken');
+        axios.defaults.xsrfCookieName = 'csrftoken';
+        axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+        const data = {
+            username,
+            password,
+            first_name,
+            last_name,
+        };
+        const res = await axios({
+            method: 'post',
+            url: '/api/signup/',
             data,
             headers: {
                 'X-CSRFToken': csrfToken,
