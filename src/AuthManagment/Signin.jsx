@@ -5,6 +5,7 @@ import {
 // import styles from './styles';
 import AuthService from '../AuthService';
 import history from '../history';
+import Navbar from '../Navbar'
 
 class Signin extends Component {
     constructor() {
@@ -48,6 +49,7 @@ class Signin extends Component {
         const { errorText, username, password } = this.state;
         return (
             <div >
+                <Navbar />
                 <Card style={{ width: 250, paddingLeft: 10 }}>
                     <CardContent>
                         <form onSubmit={this.handleFormSubmit}>

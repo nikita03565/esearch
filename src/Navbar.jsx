@@ -40,7 +40,6 @@ class Navbar extends Component {
         const { username } = this.props;
         return (
             <div>
-                <h1> { username } </h1>
                 <nav className="navbar navbar-expand-md navbar-light bg-light">
                     <button
                         className="navbar-toggler"
@@ -79,45 +78,45 @@ class Navbar extends Component {
                             <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
                                 <NavLink className="nav-link" to="/user">Профиль</NavLink>
                             </li>
-                            <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                                <NavLink className="nav-link" to="/signup">Зарегистрироваться</NavLink>
-                            </li>
-                            <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                                <NavLink className="nav-link" to="/signin">Войти</NavLink>
-                            </li>
                         </ul>
-                        
-                        <div
-                            style={{ alignItems: 'center', marginLeft: 'auto', marginRight: '0' }}
-                            className="navbar-nav"
-                        >
-                            <div>
-                                <span
-                                    className="navbar-text"
-                                    style={{ margin: '4px' }}
+                        {
+                            username 
+                            ?
+                                <div
+                                    style={{ alignItems: 'center', marginLeft: 'auto', marginRight: '0' }}
+                                    className="navbar-nav"
                                 >
-                                    {username}
-                                </span>
-                        
-                                <IconButton
-                                    style={{ marginLeft: '-5px' }}
-                                    color="primary"
-                                    component={Link}
-                                    to="/settings"
-                                >
-                                    <Settings />
-                                </IconButton>
-                            </div>
-                            <Button
-                                variant="contained"
-                                size="small"
-                                component={Link}
-                                to="/"
-                                onClick={this.handleLogout}
+                                    <div>
+                                        <span
+                                            className="navbar-text"
+                                            style={{ margin: '4px' }}
+                                        >
+                                            {username}
+                                        </span>
+                                    </div>
+                                    <Button
+                                        variant="contained"
+                                        size="small"
+                                        component={Link}
+                                        to="/"
+                                        onClick={this.handleLogout}
+                                    >
+                                        Выйти
+                                    </Button>
+                                </div>
+                            :
+                            <div
+                                style={{ alignItems: 'center', marginLeft: 'auto', marginRight: '0' }}
+                                className="navbar-nav"
                             >
-                                Выйти
-                            </Button>
-                        </div>
+                                <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+                                    <NavLink className="nav-link" to="/signup">Зарегистрироваться</NavLink>
+                                </li>
+                                <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+                                    <NavLink className="nav-link" to="/signin">Войти</NavLink>
+                                </li>
+                            </div>
+                            }
                     </div>
                 </nav>
             </div>
