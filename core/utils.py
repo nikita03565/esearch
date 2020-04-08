@@ -42,15 +42,15 @@ def get_or_create_street(data):
 
 
 def get_or_create_location(data):
-    country_data = data.pop('country')
-    city_data = data.pop('city')
-    street_data = data.pop('street')
-    district_data = data.pop('district')
+    country_data = data.pop('country', None)
+    city_data = data.pop('city', None)
+    street_data = data.pop('street', None)
+    district_data = data.pop('district', None)
 
-    country, _ = models.Country.objects.get_or_create(**country_data)
-    city = get_or_create_city(city_data)
-    street = get_or_create_street(street_data)
-    district = get_or_create_district(district_data)
+    country, _ = models.Country.objects.get_or_create(**country_data) if country_data else None
+    city = get_or_create_city(city_data) if city_data else None
+    street = get_or_create_street(street_data) if street_data else None
+    district = get_or_create_district(district_data) if district_data else None
 
     instance, created = models.Location.objects.get_or_create(**data, country=country, city=city,
                                                               street=street, district=district)
