@@ -24,6 +24,12 @@ class UserDetail extends Component {
         username: "",
         detail: true,
         editing: false,
+        countryInput: '',
+        cityInput: '',
+        districtInput: '',
+        streetInput: '',
+        buildingInput: '',
+        apartmentInput: '',
     }
 
     componentDidMount() {
@@ -49,24 +55,42 @@ class UserDetail extends Component {
         }
     }
 
+
+    createLocationData = () => {
+        const {
+            countryInput, cityInput, districtInput,
+            streetInput, buildingInput, apartmentInput
+        } = this.state;
+        const country = countryInput ? { country: {name: countryInput }} : null
+        const city = cityInput ? { city: { ...country, name: cityInput }} : null
+        const district = districtInput ? { district: { ...city, name: districtInput }} : null
+        const street = streetInput ? { street: { ...city, name: streetInput }} : null;
+        const building = buildingInput ? { building: buildingInput } : null;
+        const apartment = apartmentInput ? { apartment: apartmentInput } : null;
+        let location = {}
+        const data = [country, city, district, street, building, apartment]
+        data.filter(el => el).forEach(el => location = { ...location, ...el })
+        return location
+    }
     onUpdateUser = async () => {
         try {
             const {bio, id, date_of_birth, email, location, 
                 phone_number, social_media_links 
             } = this.state;
             const linksData = social_media_links.map(linkObj => linkObj.link).filter(link => link);
+            const locationData = this.createLocationData()
             const data = {
                 bio,
                 date_of_birth,
                 email,
-                //location,
+                location: locationData,
                 phone_number,
                 social_media_links: linksData,
             }
-            console.log('send data', data)
             const res = await updateEl('users', id, data);
-            console.log('res', res.data)
+            this.setState({ location: locationData })
         } catch (err) {
+            console.log(err)
             console.log(err.response)
             if (axios.isCancel(err)) {
                 return;
@@ -75,12 +99,21 @@ class UserDetail extends Component {
     }
 
     onEditButtonClick = () => {
-        const { editing } = this.state;
+        const { editing, location } = this.state;
         if (editing) {
             this.onUpdateUser();
             this.setState({ editing: false })
         } else {
-            this.setState({ editing: true })
+            const [country, city, district, street, building, apartment] = this.getLocationNames(location);
+            this.setState({ 
+                editing: true,
+                countryInput: country,
+                cityInput: city,
+                districtInput: district,
+                streetInput: street,
+                buildingInput: building,
+                apartmentInput: apartment,
+            })
         }
     }
 
@@ -197,11 +230,8 @@ class UserDetail extends Component {
         this.setState({ social_media_links: newLinks })
     }
 
-    getLocationString = (location) => {
-        if (location === null) {
-            return 'не указано';
-        }
-        const country = location.country ? location.country.name : '';
+    getLocationNames = (location) => {
+        const country = location && location.country ? location.country.name : '';
         let city = ''
         let district = ''
         let street = ''
@@ -222,7 +252,15 @@ class UserDetail extends Component {
         if (building && location.apartment) {
             apartment = location.apartment;
         }
-        const res = [country, city, district, street, building, apartment].filter(el => Boolean(el)).join(', ')
+        return [country, city, district, street, building, apartment]
+    }
+
+    getLocationString = (location) => {
+        if (location === null) {
+            return 'не указано';
+        }
+        const names = this.getLocationNames(location);
+        const res = names.filter(el => Boolean(el)).join(', ')
         return res;
     }
 
@@ -231,7 +269,8 @@ class UserDetail extends Component {
             bio, date_joined, date_of_birth, email,
             first_name, id, last_name, location, phone_number,
             privacy_settings, social_media_links, username, 
-            detail, editing
+            detail, editing, countryInput, cityInput, 
+            districtInput, streetInput, buildingInput, apartmentInput,
         } = this.state;
         const authId = localStorage.getItem('id');
         console.log('in render', location)
@@ -263,12 +302,48 @@ class UserDetail extends Component {
                                         <TextField
                                             label="О себе"
                                             multiline
-                                            rowsMax="4"
+                                            rowsMax="8"
                                             value={bio}
                                             fullWidth
                                             onChange={e => this.handleChange(e, 'bio')}
                                         />
-                                        Место
+                                        Место:
+                                        <br/>
+                                        <TextField
+                                            label="Страна"
+                                            value={countryInput}
+                                            onChange={e => this.handleChange(e, 'countryInput')}
+                                        />
+                                        <br/>
+                                        <TextField
+                                            label="Город"
+                                            value={cityInput}
+                                            onChange={e => this.handleChange(e, 'cityInput')}
+                                        />
+                                        <br/>
+                                        <TextField
+                                            label="Район"
+                                            value={districtInput}
+                                            onChange={e => this.handleChange(e, 'districtInput')}
+                                        />
+                                        <br/>
+                                        <TextField
+                                            label="Улица"
+                                            value={streetInput}
+                                            onChange={e => this.handleChange(e, 'streetInput')}
+                                        />
+                                        <br/>
+                                        <TextField
+                                            label="Дом"
+                                            value={buildingInput}
+                                            onChange={e => this.handleChange(e, 'buildingInput')}
+                                        />
+                                        <br/>
+                                        <TextField
+                                            label="Квартира"
+                                            value={apartmentInput}
+                                            onChange={e => this.handleChange(e, 'apartmentInput')}
+                                        />
                                         {this.getContactInfoEdit()}
                                     </Fragment>
                                 )
