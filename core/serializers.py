@@ -78,15 +78,14 @@ class LocationSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    social_media_links = serializers.SerializerMethodField()
     location = LocationSerializer(many=False)
 
-    @staticmethod
-    def get_social_media_links(instance):
-        if instance.social_media_links:
-            links = [{'id': i, 'link': link} for i, link in enumerate(instance.social_media_links)]
-            return links
-        return None
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if data['social_media_links']:
+            links = [{'id': i, 'link': link} for i, link in enumerate(data['social_media_links'])]
+            data['social_media_links'] = links
+        return data
 
     class Meta:
         model = models.User

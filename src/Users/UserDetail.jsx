@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
-import { loadData } from '../API_Requests/basic';
+import { loadData, updateEl } from '../API_Requests/basic';
 import axios from 'axios';
 import {
     Card, CardContent, Button, TextField
@@ -48,10 +48,36 @@ class UserDetail extends Component {
             }
         }
     }
+
+    onUpdateUser = async () => {
+        try {
+            const {bio, id, date_of_birth, email, location, 
+                phone_number, social_media_links 
+            } = this.state;
+            const linksData = social_media_links.map(linkObj => linkObj.link).filter(link => link);
+            const data = {
+                bio,
+                date_of_birth,
+                email,
+                //location,
+                phone_number,
+                social_media_links: linksData,
+            }
+            console.log('send data', data)
+            const res = await updateEl('users', id, data);
+            console.log('res', res.data)
+        } catch (err) {
+            console.log(err.response)
+            if (axios.isCancel(err)) {
+                return;
+            }
+        }
+    }
+
     onEditButtonClick = () => {
         const { editing } = this.state;
         if (editing) {
-            // send patch
+            this.onUpdateUser();
             this.setState({ editing: false })
         } else {
             this.setState({ editing: true })
@@ -120,7 +146,7 @@ class UserDetail extends Component {
                                         </Button>
                                     </ul>
                                 </Fragment>
-                            ) : ' не указано' // add, delete
+                            ) : ' не указано'
                         }
                     </li>
                     <li> 
@@ -171,6 +197,35 @@ class UserDetail extends Component {
         this.setState({ social_media_links: newLinks })
     }
 
+    getLocationString = (location) => {
+        if (location === null) {
+            return 'не указано';
+        }
+        const country = location.country ? location.country.name : '';
+        let city = ''
+        let district = ''
+        let street = ''
+        let building = ''
+        let apartment = ''
+        if (country && location.city) {
+            city = location.city.name;
+        }
+        if (city && location.district) {
+            district = location.district.name;
+        }
+        if (city && location.street) {
+            street = location.street.name;
+        }
+        if (street && location.building) {
+            building = location.building;
+        }
+        if (building && location.apartment) {
+            apartment = location.apartment;
+        }
+        const res = [country, city, district, street, building, apartment].filter(el => Boolean(el)).join(', ')
+        return res;
+    }
+
     render() {
         const { 
             bio, date_joined, date_of_birth, email,
@@ -179,7 +234,7 @@ class UserDetail extends Component {
             detail, editing
         } = this.state;
         const authId = localStorage.getItem('id');
-        console.log(social_media_links)
+        console.log('in render', location)
         return (
             <div>
             {detail && <Navbar />}         
@@ -200,7 +255,7 @@ class UserDetail extends Component {
                                     <Fragment>
                                         <p> { `Дата рождения: ${date_of_birth || 'не указано'}` } </p>
                                         <p> { `О себе: ${bio || 'не указано'}` } </p>
-                                        <p> { `Место: ${location || 'не указано'}` } </p>
+                                        <p> { `Место: ${this.getLocationString(location)}` } </p>
                                         {this.getContactInfo()}
                                     </Fragment>
                                 ) : (
