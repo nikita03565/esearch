@@ -101,8 +101,11 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         location_data = validated_data.pop('location', None)
         if location_data is not None:
-            location = get_or_create_location(location_data)
-            instance.location = location
+            if location_data:
+                location = get_or_create_location(location_data)
+                instance.location = location
+            else:
+                instance.location = None
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()

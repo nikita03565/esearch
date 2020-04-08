@@ -52,6 +52,6 @@ def get_or_create_location(data):
     street = get_or_create_street(street_data) if street_data else None
     district = get_or_create_district(district_data) if district_data else None
 
-    instance, created = models.Location.objects.get_or_create(**data, country=country, city=city,
-                                                              street=street, district=district)
+    instance = models.Location.objects.create(**data, country=country, city=city,
+                                              street=street, district=district)
     return instance
