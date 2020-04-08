@@ -25,6 +25,13 @@ from core import models
 
 
 class UserSerializer(serializers.ModelSerializer):
+    social_media_links = serializers.SerializerMethodField()
+
+    @staticmethod
+    def get_social_media_links(instance):
+        links = [{'id': i, 'link': link} for i, link in enumerate(instance.social_media_links)]
+        return links
+
     class Meta:
         model = models.User
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
