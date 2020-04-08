@@ -8,16 +8,22 @@ import Signup from './AuthManagment/Signup';
 import NotFound from './NotFound';
 import AuthService from './AuthService';
 import Home from './Home'
+import Users from './Users'
+import UserDetail from './Users/UserDetail'
 import history from './history';
+import Navbar from './Navbar'
 
 function Router() {   
     return (
         <ReactRouter history={history}>
+            <Navbar />
             <div style={{ margin: 20 }}>
                 <Switch>
                     <Route exact path='/' component={Home} />
                     <Route exact path='/signin' component={Signin} />
                     <Route exact path='/signup' component={Signup} />
+                    <Route exact path='/users' component={Users} />
+                    <Route exact path='/users/:id' component={UserDetail} />
                     <Route path='*' component={NotFound} />
                 </Switch>
             </div>
