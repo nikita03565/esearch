@@ -1,4 +1,5 @@
 from django.core.validators import RegexValidator
+from core import models
 
 phone_regex = RegexValidator(regex=r'^\+?1?\d{11}$', message="Phone number must be entered in the format:"
                                                              " '+78005553535'. 11 digits allowed.")
@@ -17,3 +18,40 @@ def validate_privacy_settings(privacy_data):
         if field in privacy_fields_choices and flag in privacy_flags_choices:
             validated_data.append(record)
     return validated_data
+
+
+def get_or_create_city(data):
+    country_data = data.pop('country')
+    country, created = models.Country.objects.get_or_create(**country_data)
+    instance, created = models.City.objects.get_or_create(**data, country=country)
+    return instance
+
+
+def get_or_create_district(data):
+    city_data = data.pop('city')
+    city = get_or_create_city(city_data)
+    instance, created = models.District.objects.get_or_create(**data, city=city)
+    return instance
+
+
+def get_or_create_street(data):
+    city_data = data.pop('city')
+    city = get_or_create_city(city_data)
+    instance, created = models.Street.objects.get_or_create(**data, city=city)
+    return instance
+
+
+def get_or_create_location(data):
+    country_data = data.pop('country')
+    city_data = data.pop('city')
+    street_data = data.pop('street')
+    district_data = data.pop('district')
+
+    country, _ = models.Country.objects.get_or_create(**country_data)
+    city = get_or_create_city(city_data)
+    street = get_or_create_street(street_data)
+    district = get_or_create_district(district_data)
+
+    instance, created = models.Location.objects.get_or_create(**data, country=country, city=city,
+                                                              street=street, district=district)
+    return instance

@@ -22,6 +22,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from core import models
+from core.utils import get_or_create_city, get_or_create_district, get_or_create_street, get_or_create_location
 
 
 class DesireSerializer(serializers.ModelSerializer):
@@ -40,10 +41,18 @@ class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Country
         fields = '__all__'
+        extra_kwargs = {
+            'name': {
+                'validators': []
+            }
+        }
 
 
 class CitySerializer(serializers.ModelSerializer):
     country = CountrySerializer(many=False)
+
+    def create(self, validated_data):
+        return get_or_create_city(validated_data)
 
     class Meta:
         model = models.City
@@ -53,6 +62,9 @@ class CitySerializer(serializers.ModelSerializer):
 class DistrictSerializer(serializers.ModelSerializer):
     city = CitySerializer(many=False)
 
+    def create(self, validated_data):
+        return get_or_create_district(validated_data)
+
     class Meta:
         model = models.District
         fields = '__all__'
@@ -60,6 +72,9 @@ class DistrictSerializer(serializers.ModelSerializer):
 
 class StreetSerializer(serializers.ModelSerializer):
     city = CitySerializer(many=False)
+
+    def create(self, validated_data):
+        return get_or_create_street(validated_data)
 
     class Meta:
         model = models.Street
@@ -72,6 +87,9 @@ class LocationSerializer(serializers.ModelSerializer):
     street = StreetSerializer(many=False)
     district = DistrictSerializer(many=False)
 
+    def create(self, validated_data):
+        return get_or_create_location(validated_data)
+
     class Meta:
         model = models.Location
         fields = '__all__'
@@ -79,6 +97,16 @@ class LocationSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     location = LocationSerializer(many=False)
+
+    def update(self, instance, validated_data):
+        location_data = validated_data.pop('location', None)
+        if location_data is not None:
+            location = get_or_create_location(location_data)
+            instance.location = location
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
