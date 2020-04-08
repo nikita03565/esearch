@@ -140,6 +140,7 @@ class LoginView(ObtainAuthToken):
         return Response({
             'token': token.key,
             'username': user.username,
+            'id': user.id,
         }, status=status.HTTP_200_OK)
 
 

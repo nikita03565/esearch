@@ -5,7 +5,7 @@ import {
 // import styles from './styles';
 import AuthService from '../AuthService';
 import history from '../history';
-
+import Navbar from '../Navbar'
 class Signup extends Component {
     constructor() {
         super();
@@ -49,6 +49,7 @@ class Signup extends Component {
         const { errorText, username, password, first_name, last_name, password2 } = this.state;
         return (
             <div >
+                <Navbar />
                 <div style={{
                     width: '100%',
                     height: '100%',

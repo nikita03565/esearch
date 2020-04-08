@@ -4,7 +4,7 @@ import axios from 'axios';
 import {
     Card, CardContent,
 } from '@material-ui/core';
-
+import Navbar from '../Navbar'
 
 class UserDetail extends Component {
     state = {
@@ -20,7 +20,7 @@ class UserDetail extends Component {
         privacy_settings: null,
         social_media_links: [],
         username: "",
-        detail: false,
+        detail: true,
     }
 
     componentDidMount() {
@@ -59,42 +59,45 @@ class UserDetail extends Component {
             first_name, id, last_name, location, phone_number,
             privacy_settings, social_media_links, username, detail 
         } = this.state;
-        return (           
-            <div style={{
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                alignContent: 'center',
-                justifyContent: 'center',
-                overflow: 'auto',
-            }}>
-                <Card style={{ margin: '10px' }}>
-                    <CardContent>
-                        <p> { `${username}` } </p>
-                        <p> { `${first_name} ${last_name}` } </p>
-                        <p> { `Дата рождения: ${date_of_birth || 'не указано'}` } </p>
-                        <p> { `О себе: ${bio || 'не указано'}` } </p>
-                        <p> { `Место: ${location || 'не указано'}` } </p>
-                        <div>
-                            Контактная информация:
-                            <ul>
-                                <li>
-                                    Ссылки в социальных сетях:
-                                    {
-                                        social_media_links ?
-                                        (
-                                            this.getLinksList(social_media_links)
-                                        ) : ' не указано'
-                                    }
-                                </li>
-                                <li> Номер телефона: {phone_number} </li>
-                                <li> Электронная почта: <a href={`mailto:${email}`}> {email} </a></li>
-                            </ul>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
+        return (
+            <div>
+            {detail && <Navbar />}         
+                <div style={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    alignContent: 'center',
+                    justifyContent: 'center',
+                    overflow: 'auto',
+                }}>
+                    <Card style={{ margin: '10px' }}>
+                        <CardContent>
+                            <p> <a href={`/users/${id}`}>{ `${username}` } </a></p>
+                            <p> { `${first_name} ${last_name}` } </p>
+                            <p> { `Дата рождения: ${date_of_birth || 'не указано'}` } </p>
+                            <p> { `О себе: ${bio || 'не указано'}` } </p>
+                            <p> { `Место: ${location || 'не указано'}` } </p>
+                            <div>
+                                Контактная информация:
+                                <ul>
+                                    <li>
+                                        Ссылки в социальных сетях:
+                                        {
+                                            social_media_links ?
+                                            (
+                                                this.getLinksList(social_media_links)
+                                            ) : ' не указано'
+                                        }
+                                    </li>
+                                    <li> Номер телефона: {phone_number} </li>
+                                    <li> Электронная почта: <a href={`mailto:${email}`}> {email} </a></li>
+                                </ul>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>  
         );
     }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, Button, IconButton } from '@material-ui/core';
-import { Settings } from '@material-ui/icons';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 //import NavLink from './common/NavLink';
@@ -15,9 +15,7 @@ const Auth = new AuthService();
 class Navbar extends Component {
     signal = axios.CancelToken.source();
 
-    state = {
-        editedCheckListsAmount: 0,
-    }
+    state = {}
 
     static propTypes = {
         username: PropTypes.string,
@@ -36,8 +34,7 @@ class Navbar extends Component {
     }
 
     render() {
-        const { editedCheckListsAmount } = this.state;
-        const { username } = this.props;
+        const { username, id } = this.props;
         return (
             <div>
                 <nav className="navbar navbar-expand-md navbar-light bg-light">
@@ -59,24 +56,14 @@ class Navbar extends Component {
                         style={{ maxWidth: '900px', marginLeft: 'auto', marginRight: 'auto' }}
                     >
                         <ul className="navbar-nav mr-auto">
-                            <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Основное
-                                </a>
-                                <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                </div>
+                            <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+                                <NavLink className="nav-link" to="/">Главная</NavLink>
                             </li>
                             <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                                <Badge
-                                    color="primary"
-                                    badgeContent={editedCheckListsAmount}
-                                    max={9}
-                                >
-                                    <NavLink className="nav-link" to="/search">Поиск</NavLink>
-                                </Badge>
+                                <NavLink className="nav-link" to="/search">Поиск</NavLink>
                             </li>
                             <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                                <NavLink className="nav-link" to="/user">Профиль</NavLink>
+                                <NavLink className="nav-link" to='/users'>Пользователи</NavLink>
                             </li>
                         </ul>
                         {
@@ -85,16 +72,20 @@ class Navbar extends Component {
                                 <div
                                     style={{ alignItems: 'center', marginLeft: 'auto', marginRight: '0' }}
                                     className="navbar-nav"
-                                >
+                                >   
+                                    <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+                                        <NavLink className="nav-link" to={`/users/${id}`}><AccountCircleIcon/></NavLink>
+                                    </li>
                                     <div>
                                         <span
                                             className="navbar-text"
-                                            style={{ margin: '4px' }}
+                                            style={{ margin: '5px' }}
                                         >
                                             {username}
                                         </span>
                                     </div>
                                     <Button
+                                        style={{marginLeft: '10px'}}
                                         variant="contained"
                                         size="small"
                                         component={Link}

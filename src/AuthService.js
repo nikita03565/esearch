@@ -7,6 +7,7 @@ export default class AuthService {
         this.signin = this.signin.bind(this);
         this.signup = this.signup.bind(this);
         this.getUsername = this.getUsername.bind(this);
+        this.getId = this.getId.bind(this);
     }
 
     async signin(username, password) {
@@ -27,6 +28,7 @@ export default class AuthService {
         });
         this.setToken(res.data.token);
         this.setUsername(res.data.username);
+        this.setId(res.data.id);
         return Promise.resolve(res);
     }
 
@@ -50,6 +52,7 @@ export default class AuthService {
         });
         this.setToken(res.data.token);
         this.setUsername(res.data.username);
+        this.setId(res.data.id);
         return Promise.resolve(res);
     }
 
@@ -66,6 +69,10 @@ export default class AuthService {
         localStorage.setItem('username', username);
     }
 
+    setId(id) {
+        localStorage.setItem('id', id);
+    }
+
     getToken() {
         return localStorage.getItem('token');
     }
@@ -74,8 +81,13 @@ export default class AuthService {
         return localStorage.getItem('username');
     }
 
+    getId() {
+        return localStorage.getItem('id');
+    }
+
     logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('username');
+        localStorage.removeItem('id');
     }
 }

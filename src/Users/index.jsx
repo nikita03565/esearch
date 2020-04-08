@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { loadData } from '../API_Requests/basic';
 import UserDetail from './UserDetail';
-
+import Navbar from '../Navbar'
 
 class Users extends Component {
     state = {
@@ -33,6 +33,7 @@ class Users extends Component {
         const { users } = this.state;
         return (
             <div>
+                <Navbar />
                 {users.map(user => <UserDetail data={user} key={user.id}/>)}
             </div>
         );
