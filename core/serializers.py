@@ -24,22 +24,6 @@ from rest_framework.validators import UniqueValidator
 from core import models
 
 
-class UserSerializer(serializers.ModelSerializer):
-    social_media_links = serializers.SerializerMethodField()
-
-    @staticmethod
-    def get_social_media_links(instance):
-        links = [{'id': i, 'link': link} for i, link in enumerate(instance.social_media_links)]
-        return links
-
-    class Meta:
-        model = models.User
-        fields = ('id', 'username', 'first_name', 'last_name', 'email',
-                  'date_joined', 'bio', 'date_of_birth', 'social_media_links',
-                  'phone_number', 'privacy_settings', 'location',
-                  )
-
-
 class DesireSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Desire
@@ -59,27 +43,57 @@ class CountrySerializer(serializers.ModelSerializer):
 
 
 class CitySerializer(serializers.ModelSerializer):
+    country = CountrySerializer(many=False)
+
     class Meta:
         model = models.City
         fields = '__all__'
 
 
 class DistrictSerializer(serializers.ModelSerializer):
+    city = CitySerializer(many=False)
+
     class Meta:
         model = models.District
         fields = '__all__'
 
 
 class StreetSerializer(serializers.ModelSerializer):
+    city = CitySerializer(many=False)
+
     class Meta:
         model = models.Street
         fields = '__all__'
 
 
 class LocationSerializer(serializers.ModelSerializer):
+    country = CountrySerializer(many=False)
+    city = CitySerializer(many=False)
+    street = StreetSerializer(many=False)
+    district = DistrictSerializer(many=False)
+
     class Meta:
         model = models.Location
         fields = '__all__'
+
+
+class UserSerializer(serializers.ModelSerializer):
+    social_media_links = serializers.SerializerMethodField()
+    location = LocationSerializer(many=False)
+
+    @staticmethod
+    def get_social_media_links(instance):
+        if instance.social_media_links:
+            links = [{'id': i, 'link': link} for i, link in enumerate(instance.social_media_links)]
+            return links
+        return None
+
+    class Meta:
+        model = models.User
+        fields = ('id', 'username', 'first_name', 'last_name', 'email',
+                  'date_joined', 'bio', 'date_of_birth', 'social_media_links',
+                  'phone_number', 'privacy_settings', 'location',
+                  )
 
 
 class AuthTokenSerializer(serializers.Serializer):
