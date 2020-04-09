@@ -1,8 +1,7 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import {
     Card, CardContent, Button, TextField,
 } from '@material-ui/core';
-// import styles from './styles';
 import AuthService from '../AuthService';
 import history from '../history';
 import Navbar from '../Navbar'

@@ -1,12 +1,11 @@
 import React from 'react';
 import {
-    Router as ReactRouter, Route, Switch, Redirect,
+    Router as ReactRouter, Route, Switch,
 } from 'react-router-dom';
 
 import Signin from './AuthManagment/Signin';
 import Signup from './AuthManagment/Signup';
 import NotFound from './NotFound';
-import AuthService from './AuthService';
 import Home from './Home'
 import Users from './Users'
 import UserDetail from './Users/UserDetail'

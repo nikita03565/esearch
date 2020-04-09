@@ -1,6 +1,5 @@
 import React from 'react';
 import AuthService from './AuthService';
-import history from './history';
 
 export default function withAuth(AuthComponent) {
     return function AuthWrapped(props) {

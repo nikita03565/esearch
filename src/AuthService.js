@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import history from './history';
 
 export default class AuthService {
     constructor() {

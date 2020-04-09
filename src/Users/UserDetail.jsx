@@ -1,11 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import React, {Component, Fragment} from 'react';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
-import { loadData, updateEl } from '../API_Requests/basic';
+import {loadData, updateEl} from '../API_Requests/basic';
 import axios from 'axios';
-import {
-    Card, CardContent, Button, TextField
-} from '@material-ui/core';
+import {Button, Card, CardContent, TextField} from '@material-ui/core';
 import Navbar from '../Navbar'
 import parseErrors from '../parseErrors';
 
@@ -32,19 +30,19 @@ class UserDetail extends Component {
         buildingInput: '',
         apartmentInput: '',
         errorText: '',
-    }
+    };
 
     componentDidMount() {
-        const { data, match } = this.props;
+        const {data, match} = this.props;
         if (data) {
-            this.setState({ ...data, detail: false });
+            this.setState({...data, detail: false});
         } else if (match) {
             this.onLoadUser(match.url);
-        }    
+        }
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {       
-        const { data, match } = nextProps;
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const {data, match} = nextProps;
         let newState = null;
         if (data) {
             newState = {id: data.id};
@@ -64,15 +62,15 @@ class UserDetail extends Component {
     onLoadUser = async (url) => {
         try {
             const res = await loadData(url);
-            console.log(res.data)
-            this.setState({ ...res.data, detail: true })
+            console.log(res.data);
+            this.setState({...res.data, detail: true})
         } catch (err) {
-            console.log(err)
+            console.log(err);
             if (axios.isCancel(err)) {
-                return;
+
             }
         }
-    }
+    };
 
 
     createLocationData = () => {
@@ -80,25 +78,26 @@ class UserDetail extends Component {
             countryInput, cityInput, districtInput,
             streetInput, buildingInput, apartmentInput
         } = this.state;
-        const country = countryInput ? { country: {name: countryInput }} : null
-        const city = cityInput ? { city: { ...country, name: cityInput }} : null
-        const district = districtInput ? { district: { ...city, name: districtInput }} : null
-        const street = streetInput ? { street: { ...city, name: streetInput }} : null;
-        const building = buildingInput ? { building: buildingInput } : null;
-        const apartment = apartmentInput ? { apartment: apartmentInput } : null;
-        let location = {}
-        const data = [country, city, district, street, building, apartment]
-        data.filter(el => el).forEach(el => location = { ...location, ...el })
+        const country = countryInput ? {country: {name: countryInput}} : null;
+        const city = cityInput ? {city: {...country, name: cityInput}} : null;
+        const district = districtInput ? {district: {...city, name: districtInput}} : null;
+        const street = streetInput ? {street: {...city, name: streetInput}} : null;
+        const building = buildingInput ? {building: buildingInput} : null;
+        const apartment = apartmentInput ? {apartment: apartmentInput} : null;
+        let location = {};
+        const data = [country, city, district, street, building, apartment];
+        data.filter(el => el).forEach(el => location = {...location, ...el});
         return location
-    }
+    };
 
     onUpdateUser = async () => {
         try {
-            const {bio, id, date_of_birth, email, location, 
-                phone_number, social_media_links 
+            const {
+                bio, id, date_of_birth, email,
+                phone_number, social_media_links
             } = this.state;
             const linksData = social_media_links.map(linkObj => linkObj.link).filter(link => link);
-            const locationData = this.createLocationData()
+            const locationData = this.createLocationData();
             const data = {
                 bio,
                 date_of_birth,
@@ -106,27 +105,27 @@ class UserDetail extends Component {
                 location: locationData,
                 phone_number,
                 social_media_links: linksData,
-            }
-            const res = await updateEl('users', id, data);
-            this.setState({ location: locationData, editing: false })
+            };
+            await updateEl('users', id, data);
+            this.setState({location: locationData, editing: false})
         } catch (err) {
-            console.log(err)
-            console.log(err.response)
-            const errorText = parseErrors(err)
-            this.setState({ errorText });
+            console.log(err);
+            console.log(err.response);
+            const errorText = parseErrors(err);
+            this.setState({errorText});
             if (axios.isCancel(err)) {
-                return;
+
             }
         }
-    }
+    };
 
     onEditButtonClick = () => {
-        const { editing, location } = this.state;
+        const {editing, location} = this.state;
         if (editing) {
             this.onUpdateUser();
         } else {
             const [country, city, district, street, building, apartment] = this.getLocationNames(location);
-            this.setState({ 
+            this.setState({
                 editing: true,
                 countryInput: country,
                 cityInput: city,
@@ -136,10 +135,10 @@ class UserDetail extends Component {
                 apartmentInput: apartment,
             })
         }
-    }
+    };
 
     getContactInfo = () => {
-        const { social_media_links, phone_number, email} = this.state;
+        const {social_media_links, phone_number, email} = this.state;
         return (
             <div>
                 Контактная информация:
@@ -148,11 +147,11 @@ class UserDetail extends Component {
                         Ссылки в социальных сетях:
                         {
                             social_media_links ?
-                            (
-                                <ul>
-                                    {social_media_links.map(link => <li key={link.id}><a href={link.link}> { link.link } </a></li>)}
-                                </ul>
-                            ) : ' не указано'
+                                (
+                                    <ul>
+                                        {social_media_links.map(link => <li key={link.id}><a href={link.link}> {link.link} </a></li>)}
+                                    </ul>
+                                ) : ' не указано'
                         }
                     </li>
                     <li> Номер телефона: {phone_number} </li>
@@ -160,10 +159,10 @@ class UserDetail extends Component {
                 </ul>
             </div>
         )
-    }
+    };
 
     getContactInfoEdit = () => {
-        const { social_media_links, phone_number, email} = this.state;
+        const {social_media_links, phone_number, email} = this.state;
         return (
             <div>
                 Контактная информация:
@@ -172,45 +171,45 @@ class UserDetail extends Component {
                         Ссылки в социальных сетях:
                         {
                             social_media_links ?
-                            (
-                                <Fragment>
-                                    <ul>
-                                        {social_media_links.map(link => (
-                                            <div key={link.id} style={{ width: '700px'}}>
-                                            <li style={{width: '500px', display: 'inline-block'}}>
-                                                <TextField
-                                                    label="Ссылка"
-                                                    value={link.link}
-                                                    fullWidth
-                                                    onChange={e => this.handleChangeLink(e, link.id)}
-                                                />
-                                            </li>
-                                            <Button
-                                                onClick={e => this.onDeleteLink(e, link.id)}
-                                            > 
-                                                <DeleteIcon />
-                                            </Button>
-                                            </div>
+                                (
+                                    <Fragment>
+                                        <ul>
+                                            {social_media_links.map(link => (
+                                                <div key={link.id} style={{width: '700px'}}>
+                                                    <li style={{width: '500px', display: 'inline-block'}}>
+                                                        <TextField
+                                                            label="Ссылка"
+                                                            value={link.link}
+                                                            fullWidth
+                                                            onChange={e => this.handleChangeLink(e, link.id)}
+                                                        />
+                                                    </li>
+                                                    <Button
+                                                        onClick={e => this.onDeleteLink(e, link.id)}
+                                                    >
+                                                        <DeleteIcon/>
+                                                    </Button>
+                                                </div>
                                             ))
-                                        }
-                                        <Button
-                                            onClick={this.onAddLink}
-                                        > 
-                                            <AddIcon />
-                                        </Button>
-                                    </ul>
-                                </Fragment>
-                            ) : ' не указано'
+                                            }
+                                            <Button
+                                                onClick={this.onAddLink}
+                                            >
+                                                <AddIcon/>
+                                            </Button>
+                                        </ul>
+                                    </Fragment>
+                                ) : ' не указано'
                         }
                     </li>
-                    <li> 
+                    <li>
                         <TextField
                             label="Телефон"
                             value={phone_number}
                             onChange={e => this.handleChange(e, 'phone_number')}
                         />
                     </li>
-                    <li> 
+                    <li>
                         <TextField
                             label="Электронная почта"
                             value={email}
@@ -220,44 +219,44 @@ class UserDetail extends Component {
                 </ul>
             </div>
         )
-    }
+    };
 
     onAddLink = () => {
-        const { social_media_links } = this.state;
+        const {social_media_links} = this.state;
         const [last] = social_media_links.slice(-1);
         const newId = last ? last.id + 1 : 0;
-        const new_links = [...social_media_links, {id: newId, link: ''}]
-        this.setState({ social_media_links: new_links })
-    }
+        const new_links = [...social_media_links, {id: newId, link: ''}];
+        this.setState({social_media_links: new_links})
+    };
 
     onDeleteLink = (e, id) => {
-        const { social_media_links } = this.state;
+        const {social_media_links} = this.state;
         const newLinks = social_media_links.filter(link => link.id !== id);
-        this.setState({ social_media_links: newLinks })
-    }
+        this.setState({social_media_links: newLinks})
+    };
 
     handleChange = (e, field) => {
-        this.setState({ [field]: e.target.value })
-    }
+        this.setState({[field]: e.target.value})
+    };
 
     handleChangeLink = (e, id) => {
-        const { social_media_links } = this.state;
+        const {social_media_links} = this.state;
         const newLinks = social_media_links.map(linkObj => {
             if (linkObj.id === id) {
                 return {...linkObj, link: e.target.value};
             }
             return linkObj;
         });
-        this.setState({ social_media_links: newLinks })
-    }
+        this.setState({social_media_links: newLinks})
+    };
 
     getLocationNames = (location) => {
         const country = location && location.country ? location.country.name : '';
-        let city = ''
-        let district = ''
-        let street = ''
-        let building = ''
-        let apartment = ''
+        let city = '';
+        let district = '';
+        let street = '';
+        let building = '';
+        let apartment = '';
         if (country && location.city) {
             city = location.city.name;
         }
@@ -274,31 +273,30 @@ class UserDetail extends Component {
             apartment = location.apartment;
         }
         return [country, city, district, street, building, apartment]
-    }
+    };
 
     getLocationString = (location) => {
         if (location === null) {
             return 'не указано';
         }
         const names = this.getLocationNames(location);
-        const res = names.filter(el => Boolean(el)).join(', ')
+        const res = names.filter(el => Boolean(el)).join(', ');
         return res;
-    }
+    };
 
     render() {
-        const { 
-            bio, date_joined, date_of_birth, email,
-            first_name, id, last_name, location, phone_number,
-            privacy_settings, social_media_links, username, 
-            detail, editing, countryInput, cityInput, 
-            districtInput, streetInput, buildingInput, apartmentInput,
-            errorText,
+        const {
+            bio, date_of_birth,  first_name, id,
+            last_name, location, username, detail,
+            editing, countryInput, cityInput, districtInput,
+            streetInput, buildingInput, apartmentInput, errorText,
         } = this.state;
         const authId = localStorage.getItem('id');
-        console.log('in render', errorText)
+        console.log(authId, id)
+        console.log('in render', errorText);
         return (
             <div>
-            {detail && <Navbar />}         
+                {detail && <Navbar/>}
                 <div style={{
                     minWidth: '500px',
                     display: 'flex',
@@ -307,16 +305,16 @@ class UserDetail extends Component {
                     justifyContent: 'center',
                     overflow: 'auto',
                 }}>
-                    <Card style={{ margin: '10px', minWidth: '1000px', maxWidth: '1000px' }}>
+                    <Card style={{margin: '10px', minWidth: '1000px', maxWidth: '1000px'}}>
                         <CardContent>
-                            <p> <a href={`/users/${id}`}>{ `${username}` } </a></p>
-                            <p> { `${first_name} ${last_name}` } </p>
+                            <p><a href={`/users/${id}`}>{`${username}`} </a></p>
+                            <p> {`${first_name} ${last_name}`} </p>
                             {
                                 !editing ? (
                                     <Fragment>
-                                        <p> { `Дата рождения: ${date_of_birth || 'не указано'}` } </p>
-                                        <p> { `О себе: ${bio || 'не указано'}` } </p>
-                                        <p> { `Место: ${this.getLocationString(location)}` } </p>
+                                        <p> {`Дата рождения: ${date_of_birth || 'не указано'}`} </p>
+                                        <p> {`О себе: ${bio || 'не указано'}`} </p>
+                                        <p> {`Место: ${this.getLocationString(location)}`} </p>
                                         {this.getContactInfo()}
                                     </Fragment>
                                 ) : (
@@ -372,18 +370,18 @@ class UserDetail extends Component {
                                             onChange={e => this.handleChange(e, 'apartmentInput')}
                                         />
                                         {this.getContactInfoEdit()}
-                                        <span style={{ whiteSpace: 'pre-line', color: 'red' }}>{errorText}</span>
+                                        <span style={{whiteSpace: 'pre-line', color: 'red'}}>{errorText}</span>
                                     </Fragment>
                                 )
                             }
                             <br/>
                             {
-                                detail && id == authId &&
+                                detail && id === authId &&
                                 <Button
-                                        style={{ minWidth: '151px' }}
-                                        color={editing ? 'primary' : 'default'}
-                                        variant="contained"
-                                        onClick={this.onEditButtonClick}
+                                    style={{minWidth: '151px'}}
+                                    color={editing ? 'primary' : 'default'}
+                                    variant="contained"
+                                    onClick={this.onEditButtonClick}
                                 >
                                     {editing ? 'Завершить' : 'Редактировать'}
                                 </Button>
@@ -391,7 +389,7 @@ class UserDetail extends Component {
                         </CardContent>
                     </Card>
                 </div>
-            </div>  
+            </div>
         );
     }
 }
