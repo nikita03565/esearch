@@ -131,7 +131,7 @@ class DesireSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Desire
-        fields = ['name', 'description', 'user']
+        fields = ['name', 'description', 'user', 'id']
 
 
 class DesireDocSerializer(DocumentSerializer):

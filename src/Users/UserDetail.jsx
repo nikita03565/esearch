@@ -376,7 +376,7 @@ class UserDetail extends Component {
                             }
                             <br/>
                             {
-                                detail && id === authId &&
+                                detail && Number(id) === Number(authId) &&
                                 <Button
                                     style={{minWidth: '151px'}}
                                     color={editing ? 'primary' : 'default'}
