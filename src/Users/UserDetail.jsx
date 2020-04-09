@@ -36,12 +36,29 @@ class UserDetail extends Component {
 
     componentDidMount() {
         const { data, match } = this.props;
-        if (match) {
-            this.onLoadUser(match.url);
-        }
         if (data) {
             this.setState({ ...data, detail: false });
-        }        
+        } else if (match) {
+            this.onLoadUser(match.url);
+        }    
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {       
+        const { data, match } = nextProps;
+        let newState = null;
+        if (data) {
+            newState = {id: data.id};
+        } else if (match) {
+            newState = {id: match.params.id};
+        }
+        return newState;
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const {id} = this.state;
+        if (id !== prevState.id) {
+            this.onLoadUser(`users/${id}`)
+        }
     }
 
     onLoadUser = async (url) => {
