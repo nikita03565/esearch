@@ -37,6 +37,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core import serializers, models
+from core.filters import filters, DesireFilter
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -49,6 +50,8 @@ class DesireViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.DesireSerializer
     queryset = models.Desire.objects.all()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filterset_class = DesireFilter
+    filter_backends = (filters.DjangoFilterBackend,)
 
 
 class DesireDocViewSet(BaseDocumentViewSet):
@@ -82,32 +85,34 @@ class DesireDocViewSet(BaseDocumentViewSet):
                 LOOKUP_QUERY_LTE,
             ],
         },
-        'name': {
-            'field': 'name',
-            # Note, that we limit the lookups of `tags` field in
-            # this example, to `terms, `prefix`, `wildcard`, `in` and
-            # `exclude` filters.
-            'lookups': [
-                LOOKUP_FILTER_TERMS,
-                LOOKUP_FILTER_PREFIX,
-                LOOKUP_FILTER_WILDCARD,
-                LOOKUP_QUERY_IN,
-                LOOKUP_QUERY_EXCLUDE,
-            ],
-        },
-        'description': {
-            'field': 'description',
-            # Note, that we limit the lookups of `tags` field in
-            # this example, to `terms, `prefix`, `wildcard`, `in` and
-            # `exclude` filters.
-            'lookups': [
-                LOOKUP_FILTER_TERMS,
-                LOOKUP_FILTER_PREFIX,
-                LOOKUP_FILTER_WILDCARD,
-                LOOKUP_QUERY_IN,
-                LOOKUP_QUERY_EXCLUDE,
-            ],
-        },
+        'name': 'name.raw',
+        'description': 'name.raw'
+        # 'name': {
+        #     'field': 'name',
+        #     # Note, that we limit the lookups of `tags` field in
+        #     # this example, to `terms, `prefix`, `wildcard`, `in` and
+        #     # `exclude` filters.
+        #     'lookups': [
+        #         LOOKUP_FILTER_TERMS,
+        #         LOOKUP_FILTER_PREFIX,
+        #         LOOKUP_FILTER_WILDCARD,
+        #         LOOKUP_QUERY_IN,
+        #         LOOKUP_QUERY_EXCLUDE,
+        #     ],
+        # },
+        # 'description': {
+        #     'field': 'description',
+        #     # Note, that we limit the lookups of `tags` field in
+        #     # this example, to `terms, `prefix`, `wildcard`, `in` and
+        #     # `exclude` filters.
+        #     'lookups': [
+        #         LOOKUP_FILTER_TERMS,
+        #         LOOKUP_FILTER_PREFIX,
+        #         LOOKUP_FILTER_WILDCARD,
+        #         LOOKUP_QUERY_IN,
+        #         LOOKUP_QUERY_EXCLUDE,
+        #     ],
+        # },
     }
 
     suggester_fields = {
