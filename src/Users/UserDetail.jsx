@@ -322,6 +322,11 @@ class UserDetail extends Component {
                                 ) : (
                                     <Fragment>
                                         <TextField
+                                            label="Дата рождения"
+                                            value={date_of_birth}
+                                            onChange={e => this.handleChange(e, 'date_of_birth')}
+                                        />
+                                        <TextField
                                             label="О себе"
                                             multiline
                                             rowsMax="8"
