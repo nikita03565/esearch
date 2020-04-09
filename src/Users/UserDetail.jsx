@@ -7,6 +7,7 @@ import {
     Card, CardContent, Button, TextField
 } from '@material-ui/core';
 import Navbar from '../Navbar'
+import parseErrors from '../parseErrors';
 
 class UserDetail extends Component {
     state = {
@@ -30,6 +31,7 @@ class UserDetail extends Component {
         streetInput: '',
         buildingInput: '',
         apartmentInput: '',
+        errorText: '',
     }
 
     componentDidMount() {
@@ -72,6 +74,7 @@ class UserDetail extends Component {
         data.filter(el => el).forEach(el => location = { ...location, ...el })
         return location
     }
+
     onUpdateUser = async () => {
         try {
             const {bio, id, date_of_birth, email, location, 
@@ -88,10 +91,12 @@ class UserDetail extends Component {
                 social_media_links: linksData,
             }
             const res = await updateEl('users', id, data);
-            this.setState({ location: locationData })
+            this.setState({ location: locationData, editing: false })
         } catch (err) {
             console.log(err)
             console.log(err.response)
+            const errorText = parseErrors(err)
+            this.setState({ errorText });
             if (axios.isCancel(err)) {
                 return;
             }
@@ -102,7 +107,6 @@ class UserDetail extends Component {
         const { editing, location } = this.state;
         if (editing) {
             this.onUpdateUser();
-            this.setState({ editing: false })
         } else {
             const [country, city, district, street, building, apartment] = this.getLocationNames(location);
             this.setState({ 
@@ -271,9 +275,10 @@ class UserDetail extends Component {
             privacy_settings, social_media_links, username, 
             detail, editing, countryInput, cityInput, 
             districtInput, streetInput, buildingInput, apartmentInput,
+            errorText,
         } = this.state;
         const authId = localStorage.getItem('id');
-        console.log('in render', location)
+        console.log('in render', errorText)
         return (
             <div>
             {detail && <Navbar />}         
@@ -345,6 +350,7 @@ class UserDetail extends Component {
                                             onChange={e => this.handleChange(e, 'apartmentInput')}
                                         />
                                         {this.getContactInfoEdit()}
+                                        <span style={{ whiteSpace: 'pre-line', color: 'red' }}>{errorText}</span>
                                     </Fragment>
                                 )
                             }

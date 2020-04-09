@@ -5,7 +5,9 @@ import {
 // import styles from './styles';
 import AuthService from '../AuthService';
 import history from '../history';
-import Navbar from '../Navbar'
+import Navbar from '../Navbar';
+import parseErrors from '../parseErrors';
+
 class Signup extends Component {
     constructor() {
         super();
@@ -35,7 +37,8 @@ class Signup extends Component {
             await this.Auth.signup(username, password, first_name, last_name);
             history.push('/');
         } catch (err) {
-            this.setState({ errorText: JSON.stringify(err.response) });
+            const errorText = parseErrors(err);
+            this.setState({ errorText });
         }
     }
 
