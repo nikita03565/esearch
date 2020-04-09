@@ -25,12 +25,6 @@ from core import models
 from core.utils import get_or_create_city, get_or_create_district, get_or_create_street, get_or_create_location
 
 
-class DesireSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Desire
-        fields = '__all__'
-
-
 class FriendshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Friendship
@@ -124,6 +118,20 @@ class UserSerializer(serializers.ModelSerializer):
                   'date_joined', 'bio', 'date_of_birth', 'social_media_links',
                   'phone_number', 'privacy_settings', 'location',
                   )
+
+
+class DesireSerializer(serializers.ModelSerializer):
+    user = UserSerializer(required=False)
+
+    def create(self, validated_data):
+        user_id = self.context['request'].user.id
+        instance = models.Desire.objects.create(**validated_data, user_id=user_id)
+        instance.save()
+        return instance
+
+    class Meta:
+        model = models.Desire
+        fields = ['name', 'description', 'user']
 
 
 class AuthTokenSerializer(serializers.Serializer):
