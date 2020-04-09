@@ -1,6 +1,6 @@
-# from django_elasticsearch_dsl_drf.serializers import DocumentSerializer
-#
-# from core.documents import CarDocument
+from django_elasticsearch_dsl_drf.serializers import DocumentSerializer
+
+from core.documents import DesireDocument
 #
 #
 # class CarDocumentSerializer(DocumentSerializer):
@@ -130,6 +130,21 @@ class DesireSerializer(serializers.ModelSerializer):
         return instance
 
     class Meta:
+        model = models.Desire
+        fields = ['name', 'description', 'user']
+
+
+class DesireDocSerializer(DocumentSerializer):
+    user = UserSerializer(required=False)
+
+    def create(self, validated_data):
+        user_id = self.context['request'].user.id
+        instance = models.Desire.objects.create(**validated_data, user_id=user_id)
+        instance.save()
+        return instance
+
+    class Meta:
+        document = DesireDocument
         model = models.Desire
         fields = ['name', 'description', 'user']
 
