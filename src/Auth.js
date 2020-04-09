@@ -10,7 +10,10 @@ export function authHeader() {
 
 export function withAuthHeader(headers) {
     const newHeaders = { ...headers };
-    newHeaders.Authorization = `Token ${localStorage.getItem('token')}`;
+    const token = localStorage.getItem('token');
+    if (token) {
+        newHeaders.Authorization = `Token ${localStorage.getItem('token')}`;
+    }
     return newHeaders;
 }
 

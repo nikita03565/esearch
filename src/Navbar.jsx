@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Badge, Button, IconButton } from '@material-ui/core';
-import { Settings } from '@material-ui/icons';
+import React, {Component} from 'react';
+import {Link, NavLink} from 'react-router-dom';
+import {Button} from '@material-ui/core';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-//import NavLink from './common/NavLink';
-import { NavLink } from 'react-router-dom';
 
 import AuthService from './AuthService';
 import WithAuth from './WithAuth'
@@ -15,9 +13,7 @@ const Auth = new AuthService();
 class Navbar extends Component {
     signal = axios.CancelToken.source();
 
-    state = {
-        editedCheckListsAmount: 0,
-    }
+    state = {}
 
     static propTypes = {
         username: PropTypes.string,
@@ -36,8 +32,7 @@ class Navbar extends Component {
     }
 
     render() {
-        const { editedCheckListsAmount } = this.state;
-        const { username } = this.props;
+        const {username, id} = this.props;
         return (
             <div>
                 <nav className="navbar navbar-expand-md navbar-light bg-light">
@@ -50,51 +45,45 @@ class Navbar extends Component {
                         aria-expanded="false"
                         aria-label="Toggle navigation"
                     >
-                        <span className="navbar-toggler-icon" />
+                        <span className="navbar-toggler-icon"/>
                     </button>
 
                     <div
                         className="collapse navbar-collapse"
                         id="navbarSupportedContent"
-                        style={{ maxWidth: '900px', marginLeft: 'auto', marginRight: 'auto' }}
+                        style={{maxWidth: '900px', marginLeft: 'auto', marginRight: 'auto'}}
                     >
                         <ul className="navbar-nav mr-auto">
-                            <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Основное
-                                </a>
-                                <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                </div>
+                            <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+                                <NavLink className="nav-link" to="/">Главная</NavLink>
                             </li>
                             <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                                <Badge
-                                    color="primary"
-                                    badgeContent={editedCheckListsAmount}
-                                    max={9}
-                                >
-                                    <NavLink className="nav-link" to="/search">Поиск</NavLink>
-                                </Badge>
+                                <NavLink className="nav-link" to="/search">Поиск</NavLink>
                             </li>
                             <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                                <NavLink className="nav-link" to="/user">Профиль</NavLink>
+                                <NavLink className="nav-link" to='/users'>Пользователи</NavLink>
                             </li>
                         </ul>
                         {
-                            username 
-                            ?
+                            username
+                                ?
                                 <div
-                                    style={{ alignItems: 'center', marginLeft: 'auto', marginRight: '0' }}
+                                    style={{alignItems: 'center', marginLeft: 'auto', marginRight: '0'}}
                                     className="navbar-nav"
                                 >
+                                    <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+                                        <NavLink className="nav-link" to={`/users/${id}`}><AccountCircleIcon/></NavLink>
+                                    </li>
                                     <div>
                                         <span
                                             className="navbar-text"
-                                            style={{ margin: '4px' }}
+                                            style={{margin: '5px'}}
                                         >
                                             {username}
                                         </span>
                                     </div>
                                     <Button
+                                        style={{marginLeft: '10px'}}
                                         variant="contained"
                                         size="small"
                                         component={Link}
@@ -104,19 +93,19 @@ class Navbar extends Component {
                                         Выйти
                                     </Button>
                                 </div>
-                            :
-                            <div
-                                style={{ alignItems: 'center', marginLeft: 'auto', marginRight: '0' }}
-                                className="navbar-nav"
-                            >
-                                <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                                    <NavLink className="nav-link" to="/signup">Зарегистрироваться</NavLink>
-                                </li>
-                                <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                                    <NavLink className="nav-link" to="/signin">Войти</NavLink>
-                                </li>
-                            </div>
-                            }
+                                :
+                                <div
+                                    style={{alignItems: 'center', marginLeft: 'auto', marginRight: '0'}}
+                                    className="navbar-nav"
+                                >
+                                    <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+                                        <NavLink className="nav-link" to="/signup">Зарегистрироваться</NavLink>
+                                    </li>
+                                    <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+                                        <NavLink className="nav-link" to="/signin">Войти</NavLink>
+                                    </li>
+                                </div>
+                        }
                     </div>
                 </nav>
             </div>

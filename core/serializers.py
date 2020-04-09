@@ -22,15 +22,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from core import models
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.User
-        fields = ('id', 'username', 'first_name', 'last_name', 'email',
-                  'date_joined', 'bio', 'date_of_birth', 'social_media_links',
-                  'phone_number', 'privacy_settings', 'location',
-                  )
+from core.utils import get_or_create_city, get_or_create_district, get_or_create_street, get_or_create_location
 
 
 class DesireSerializer(serializers.ModelSerializer):
@@ -49,30 +41,89 @@ class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Country
         fields = '__all__'
+        extra_kwargs = {
+            'name': {
+                'validators': []
+            }
+        }
 
 
 class CitySerializer(serializers.ModelSerializer):
+    country = CountrySerializer(many=False)
+
+    def create(self, validated_data):
+        return get_or_create_city(validated_data)
+
     class Meta:
         model = models.City
         fields = '__all__'
 
 
 class DistrictSerializer(serializers.ModelSerializer):
+    city = CitySerializer(many=False)
+
+    def create(self, validated_data):
+        return get_or_create_district(validated_data)
+
     class Meta:
         model = models.District
         fields = '__all__'
 
 
 class StreetSerializer(serializers.ModelSerializer):
+    city = CitySerializer(many=False)
+
+    def create(self, validated_data):
+        return get_or_create_street(validated_data)
+
     class Meta:
         model = models.Street
         fields = '__all__'
 
 
 class LocationSerializer(serializers.ModelSerializer):
+    country = CountrySerializer(many=False)
+    city = CitySerializer(many=False)
+    street = StreetSerializer(many=False)
+    district = DistrictSerializer(many=False)
+
+    def create(self, validated_data):
+        return get_or_create_location(validated_data)
+
     class Meta:
         model = models.Location
         fields = '__all__'
+
+
+class UserSerializer(serializers.ModelSerializer):
+    location = LocationSerializer(many=False)
+
+    def update(self, instance, validated_data):
+        location_data = validated_data.pop('location', None)
+        if location_data is not None:
+            if location_data:
+                location = get_or_create_location(location_data)
+                instance.location = location
+            else:
+                instance.location = None
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if data['social_media_links']:
+            links = [{'id': i, 'link': link} for i, link in enumerate(data['social_media_links'])]
+            data['social_media_links'] = links
+        return data
+
+    class Meta:
+        model = models.User
+        fields = ('id', 'username', 'first_name', 'last_name', 'email',
+                  'date_joined', 'bio', 'date_of_birth', 'social_media_links',
+                  'phone_number', 'privacy_settings', 'location',
+                  )
 
 
 class AuthTokenSerializer(serializers.Serializer):

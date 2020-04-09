@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import {
     Card, CardContent, Button, TextField,
 } from '@material-ui/core';
-// import styles from './styles';
 import AuthService from '../AuthService';
 import history from '../history';
 import Navbar from '../Navbar'
+import parseErrors from '../parseErrors';
 
 class Signin extends Component {
     constructor() {
@@ -34,7 +34,8 @@ class Signin extends Component {
             await this.Auth.signin(username, password);
             history.push('/');
         } catch (err) {
-            this.setState({ errorText: JSON.stringify(err.response) });
+            const errorText = parseErrors(err);
+            this.setState({ errorText });
         }
     }
 
