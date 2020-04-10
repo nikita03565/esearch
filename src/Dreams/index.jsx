@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {loadDataWithQp, updateEl, deleteEl, addEl} from '../API_Requests/basic';
+import {loadDataWithQp, deleteEl, addEl} from '../API_Requests/basic';
 import axios from 'axios';
 import Dream from './Dream'
 import Navbar from '../Navbar'

@@ -1,10 +1,7 @@
 import React, {Component, Fragment} from 'react';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
-import {loadData, updateEl, addEl} from '../API_Requests/basic';
+import {updateEl} from '../API_Requests/basic';
 import axios from 'axios';
 import {Button, Card, CardContent, TextField} from '@material-ui/core';
-import Navbar from '../Navbar'
 import parseErrors from '../parseErrors';
 
 class Dream extends Component {
