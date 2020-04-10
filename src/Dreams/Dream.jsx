@@ -89,6 +89,7 @@ class Dream extends Component {
     render() {
         const {id, name, description, editing, creating, user} = this.state;
         const user_id = user ? user.id : 0;
+        const user_username = user ? user.username : '';
         const authId = Number(localStorage.getItem('id'));
         console.log('STATE', this.state)
         console.log(user_id, authId)
@@ -111,6 +112,7 @@ class Dream extends Component {
             }}>
                 <Card style={{margin: '10px', minWidth: '1000px', maxWidth: '1000px'}}>
                     <CardContent>
+                        <p><a href={`users/${user_id}`}> {user_username} </a></p>
                         {
                             editing || creating ? (
                                 <Fragment>
@@ -130,8 +132,8 @@ class Dream extends Component {
                                 </Fragment>
                             ) : (
                                 <Fragment>
-                                    <p>{name}</p>
-                                    <p>{description}</p>
+                                    <p>Название: {name}</p>
+                                    <p>Подробное описание: {description}</p>
                                 </Fragment>
                             )
                         }
