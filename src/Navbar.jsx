@@ -70,7 +70,10 @@ class Navbar extends Component {
                                 <div
                                     style={{alignItems: 'center', marginLeft: 'auto', marginRight: '0'}}
                                     className="navbar-nav"
-                                >
+                                >   
+                                    <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+                                        <NavLink className="nav-link" to={`/dreams/${id}`}>Мои мечты</NavLink>
+                                    </li>
                                     <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
                                         <NavLink className="nav-link" to={`/users/${id}`}><AccountCircleIcon/></NavLink>
                                     </li>

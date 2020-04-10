@@ -8,6 +8,7 @@ import Signup from './AuthManagment/Signup';
 import NotFound from './NotFound';
 import Home from './Home'
 import Users from './Users'
+import Dreams from './Dreams'
 import UserDetail from './Users/UserDetail'
 import history from './history';
 
@@ -20,6 +21,8 @@ function Router() {
                     <Route exact path='/signin' component={Signin} />
                     <Route exact path='/signup' component={Signup} />
                     <Route exact path='/users' component={Users} />
+                    <Route exact path='/dreams' component={Dreams} />
+                    <Route exact path='/dreams/:id' component={Dreams} />
                     <Route exact path='/users/:id' component={UserDetail} />
                     <Route path='*' component={NotFound} />
                 </Switch>

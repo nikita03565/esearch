@@ -23,6 +23,7 @@ class UserDetail extends Component {
         username: "",
         detail: true,
         editing: false,
+        creating: false,
         countryInput: '',
         cityInput: '',
         districtInput: '',
@@ -308,6 +309,7 @@ class UserDetail extends Component {
                     <Card style={{margin: '10px', minWidth: '1000px', maxWidth: '1000px'}}>
                         <CardContent>
                             <p><a href={`/users/${id}`}>{`${username}`} </a></p>
+                            <p><a href={`/dreams/${id}`}> Мечты </a></p>
                             <p> {`${first_name} ${last_name}`} </p>
                             {
                                 !editing ? (
@@ -376,7 +378,7 @@ class UserDetail extends Component {
                             }
                             <br/>
                             {
-                                detail && id === authId &&
+                                detail && Number(id) === Number(authId) &&
                                 <Button
                                     style={{minWidth: '151px'}}
                                     color={editing ? 'primary' : 'default'}

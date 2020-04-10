@@ -1,84 +1,35 @@
-# from django_elasticsearch_dsl_drf.constants import (
-#     LOOKUP_FILTER_TERMS,
-#     LOOKUP_FILTER_RANGE,
-#     LOOKUP_FILTER_PREFIX,
-#     LOOKUP_FILTER_WILDCARD,
-#     LOOKUP_QUERY_IN,
-#     LOOKUP_QUERY_GT,
-#     LOOKUP_QUERY_GTE,
-#     LOOKUP_QUERY_LT,
-#     LOOKUP_QUERY_LTE,
-#     LOOKUP_QUERY_EXCLUDE,
-#     SUGGESTER_COMPLETION)
-# from django_elasticsearch_dsl_drf.filter_backends import (
-#     FilteringFilterBackend,
-#     IdsFilterBackend,
-#     OrderingFilterBackend,
-#     DefaultOrderingFilterBackend,
-#     SearchFilterBackend,
-#     FacetedSearchFilterBackend,
-#     SuggesterFilterBackend,
-# )
-# from django_elasticsearch_dsl_drf.viewsets import BaseDocumentViewSet
-# from django_elasticsearch_dsl_drf.pagination import PageNumberPagination
-#
-# from core.documents import CarDocument
-# from core.serializers import CarDocumentSerializer
-#
-#
-# class CarViewSet(BaseDocumentViewSet):
-#     document = CarDocument
-#     serializer_class = CarDocumentSerializer
-#     lookup_field = 'id'
-#
-#     filter_backends = [
-#         DefaultOrderingFilterBackend,
-#         FilteringFilterBackend,
-#         SearchFilterBackend,
-#         SuggesterFilterBackend,
-#     ]
-#
-#     search_fields = (
-#         'name',
-#         'description',
-#     )
-#
-#     filter_fields = {
-#         'id': {
-#             'field': 'id',
-#             'lookups': [
-#                 LOOKUP_FILTER_RANGE,
-#                 LOOKUP_QUERY_IN,
-#                 LOOKUP_QUERY_GT,
-#                 LOOKUP_QUERY_GTE,
-#                 LOOKUP_QUERY_LT,
-#                 LOOKUP_QUERY_LTE,
-#             ],
-#         },
-#         'name': 'name',
-#     }
-#
-#     suggester_fields = {
-#         'name_suggest': {
-#             'field': 'name.suggest',
-#             'suggesters': [
-#                 SUGGESTER_COMPLETION,
-#             ],
-#         },
-#     }
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth import logout
 from django.shortcuts import get_object_or_404
+from django_elasticsearch_dsl_drf.constants import (
+    LOOKUP_FILTER_RANGE,
+    LOOKUP_QUERY_IN,
+    LOOKUP_QUERY_GT,
+    LOOKUP_QUERY_GTE,
+    LOOKUP_QUERY_LT,
+    LOOKUP_QUERY_LTE,
+    SUGGESTER_COMPLETION)
+from django_elasticsearch_dsl_drf.filter_backends import (
+    FilteringFilterBackend,
+    IdsFilterBackend,
+    OrderingFilterBackend,
+    DefaultOrderingFilterBackend,
+    SearchFilterBackend,
+    SuggesterFilterBackend,
+)
+from django_elasticsearch_dsl_drf.viewsets import BaseDocumentViewSet
 from rest_framework import permissions, viewsets
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core import serializers, models
+from core.documents import DesireDocument
+from core.filters import filters, DesireFilter
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -91,6 +42,82 @@ class DesireViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.DesireSerializer
     queryset = models.Desire.objects.all()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filterset_class = DesireFilter
+    filter_backends = (filters.DjangoFilterBackend,)
+
+
+class DesireDocViewSet(BaseDocumentViewSet):
+    document = DesireDocument
+    serializer_class = serializers.DesireDocSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    lookup_field = 'id'
+
+    filter_backends = [
+        FilteringFilterBackend,
+        IdsFilterBackend,
+        OrderingFilterBackend,
+        DefaultOrderingFilterBackend,
+        SearchFilterBackend,
+        SuggesterFilterBackend,
+    ]
+
+    search_fields = (
+        'name',
+        'description',
+    )
+
+    filter_fields = {
+        'id': {
+            'field': 'id',
+            'lookups': [
+                LOOKUP_FILTER_RANGE,
+                LOOKUP_QUERY_IN,
+                LOOKUP_QUERY_GT,
+                LOOKUP_QUERY_GTE,
+                LOOKUP_QUERY_LT,
+                LOOKUP_QUERY_LTE,
+            ],
+        },
+        'name': 'name.raw',
+        'description': 'name.raw'
+    }
+
+    suggester_fields = {
+        'name_suggest': {
+            'field': 'name.suggest',
+            'suggesters': [
+                SUGGESTER_COMPLETION,
+            ],
+            'options': {
+                'size': 20,
+            }
+        },
+        'description_suggest': {
+            'field': 'description.suggest',
+            'suggesters': [
+                SUGGESTER_COMPLETION,
+            ],
+            'options': {
+                'size': 20,
+            }
+        },
+    }
+    ordering_fields = {
+        'id': 'id'
+    }
+
+    @action(detail=False)
+    def suggest(self, request):
+        """Suggest functionality."""
+        queryset = self.filter_queryset(self.get_queryset())
+        is_suggest = getattr(queryset, '_suggest', False)
+        if not is_suggest:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        page = self.paginate_queryset(queryset)
+        return Response(page)
 
 
 class CountryViewSet(viewsets.ModelViewSet):

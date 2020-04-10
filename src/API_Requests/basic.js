@@ -11,6 +11,14 @@ export const loadData = async (baseUrl) => {
 };
 
 
+export const loadDataWithQp = async (url) => {
+    const res = await axios({
+        url: `/api/${url}`,
+        headers: withAuthHeader(),
+    });
+    return res;
+};
+
 export const retreiveData = async (baseUrl, id) => {
     const res = await axios({
         url: `/api/${baseUrl}/${id}/`,

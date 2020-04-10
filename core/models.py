@@ -10,6 +10,9 @@ class Desire(models.Model):
     description = models.TextField('description', max_length=512, blank=True)
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='desires')
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return f'{self.user}: {self.name}'
 
@@ -26,9 +29,15 @@ class Friendship(models.Model):
     friend = models.ForeignKey('User', related_name="friend_set", on_delete=models.CASCADE)
     status = models.CharField(choices=STATUSES, max_length=1)
 
+    class Meta:
+        ordering = ['id']
+
 
 class Country(models.Model):
     name = models.CharField('name', max_length=100, )
+
+    class Meta:
+        ordering = ['id']
 
     def __str__(self):
         return f'{self.name}'
@@ -38,6 +47,9 @@ class City(models.Model):
     name = models.CharField('name', max_length=100, )
     country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='cities')
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return f'{self.name}, {self.country}'
 
@@ -46,6 +58,9 @@ class District(models.Model):
     name = models.CharField('name', max_length=100, )
     city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='districts')
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return f'{self.name}, {self.city}'
 
@@ -53,6 +68,9 @@ class District(models.Model):
 class Street(models.Model):
     name = models.CharField('name', max_length=100, )
     city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='streets')
+
+    class Meta:
+        ordering = ['id']
 
     def __str__(self):
         return f'{self.name}, {self.city}'
@@ -65,6 +83,9 @@ class Location(models.Model):
     street = models.ForeignKey(Street, on_delete=models.CASCADE, null=True, blank=True)
     building = models.CharField(max_length=64, null=True, blank=True)
     apartment = models.CharField(max_length=64, null=True, blank=True)
+
+    class Meta:
+        ordering = ['id']
 
     def __str__(self):
         return f'{self.country}, {self.city}, {self.district}, {self.street}, {self.building}, {self.apartment}'
