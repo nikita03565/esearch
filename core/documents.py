@@ -19,14 +19,16 @@ class DesireDocument(Document):
     name = fields.TextField(
         analyzer=html_strip,
         fields={
-            'raw': fields.TextField(analyzer='keyword')
+            'raw': fields.TextField(analyzer='whitespace'),
+            'suggest': fields.CompletionField(),
         }
     )
 
     description = fields.TextField(
         analyzer=html_strip,
         fields={
-            'raw': fields.TextField(analyzer='keyword')
+            'raw': fields.TextField(analyzer='whitespace'),
+            'suggest': fields.CompletionField(),
         }
     )
 
