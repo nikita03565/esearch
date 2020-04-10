@@ -135,18 +135,11 @@ class DesireSerializer(serializers.ModelSerializer):
 
 
 class DesireDocSerializer(DocumentSerializer):
-    user = UserSerializer(required=False)
-
-    def create(self, validated_data):
-        user_id = self.context['request'].user.id
-        instance = models.Desire.objects.create(**validated_data, user_id=user_id)
-        instance.save()
-        return instance
 
     class Meta:
         document = DesireDocument
         model = models.Desire
-        fields = ['name', 'description', 'user']
+        fields = ['name', 'description', 'id', 'user']
 
 
 class AuthTokenSerializer(serializers.Serializer):

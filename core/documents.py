@@ -16,6 +16,13 @@ html_strip = analyzer(
 @registry.register_document
 class DesireDocument(Document):
     id = fields.IntegerField(attr='id')
+    user = fields.ObjectField(
+        properties={
+            'id': fields.IntegerField(attr='id'),
+            'username': fields.TextField(attr='username')
+        }
+    )
+
     name = fields.TextField(
         analyzer=html_strip,
         fields={
