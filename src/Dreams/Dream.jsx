@@ -3,6 +3,8 @@ import {updateEl} from '../API_Requests/basic';
 import axios from 'axios';
 import {Button, Card, CardContent, TextField} from '@material-ui/core';
 import parseErrors from '../parseErrors';
+import {suggestDreams} from '../API_Requests/search';
+import {Autocomplete} from '@material-ui/lab';
 
 class Dream extends Component {
     state = {
@@ -13,6 +15,7 @@ class Dream extends Component {
         errorText: '',
         editing: false,
         creating: false,
+        suggestions: []
     }
 
     componentDidMount() {
@@ -21,8 +24,40 @@ class Dream extends Component {
     }
 
     handleChange = (e, field) => {
+        if (field === 'name') {
+            const input = e.target.value;
+            const last = input.split(" ").splice(-1)[0];
+            if (last) {
+                this.onSuggest(last);
+            }
+        }
         this.setState({[field]: e.target.value})
     };
+
+    handleChangeAuto = (value, field) => {
+        if (field === 'name') {
+            const input = value;
+            const last = input.split(" ").splice(-1)[0];
+            if (last) {
+                this.onSuggest(last);
+            }
+        }
+        this.setState({[field]: value})
+    };
+
+    onSuggest = async (term) => {
+        try {
+            const res = await suggestDreams('name', term);
+            const suggestions = res.data.name_suggest__completion[0].options.map(suggestion => ({id: suggestion.text, label: suggestion.text}))
+            this.setState({suggestions})
+        } catch (err) {
+            console.log(err);
+            console.log(err.response);
+            if (axios.isCancel(err)) {
+
+            }
+        }
+    }
 
     onEditButtonClick = () => {
         const {editing, creating} = this.state;
@@ -84,7 +119,9 @@ class Dream extends Component {
     }
 
     render() {
-        const {id, name, description, editing, creating, user} = this.state;
+        const {id, name, description, editing,
+             creating, user, suggestions
+        } = this.state;
         const user_id = user ? user.id : 0;
         const user_username = user ? user.username : '';
         const authId = Number(localStorage.getItem('id'));
@@ -110,10 +147,19 @@ class Dream extends Component {
                         {
                             editing || creating ? (
                                 <Fragment>
-                                    <TextField
-                                        label="Название"
-                                        value={name}
-                                        onChange={e => this.handleChange(e, 'name')}
+                                    <Autocomplete
+                                        autoComplete={true}
+                                        freeSolo={true}
+                                        options={suggestions}
+                                        getOptionLabel={(option) => option.label}
+                                        onInputChange={(e, value) => this.handleChangeAuto(value, 'name')}
+                                        style={{ width: 300 }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Название"
+                                                onChange={e => this.handleChange(e, 'name')}
+                                            />)}
                                     />
                                     <TextField
                                         label="Подробное описание"
