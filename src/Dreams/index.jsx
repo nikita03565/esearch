@@ -17,6 +17,23 @@ class Dreams extends Component {
         this.onLoadDreams(id);
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const {match: {params: {id} = null}} = nextProps;
+        if (id !== prevState.id) {
+            return {
+                url_id: id,
+            }
+        }
+        return null;
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const {url_id} = this.state;
+        if (url_id !== prevState.url_id) {
+            this.onLoadDreams(url_id)
+        }
+    }
+
     onLoadDreams = async (user_id) => {
         try {
             const url = user_id ? `desires/?user_id=${user_id}` : 'desires/'
@@ -54,7 +71,6 @@ class Dreams extends Component {
 
     onDeleteDream = async (id) => {
         try {
-            console.log('ID!!!', id)
             const {dreams} = this.state;
             await deleteEl('desires', id);
             const newDreams = dreams.filter(obj => obj.id !== id)
@@ -71,7 +87,6 @@ class Dreams extends Component {
     render() {
         const {dreams, url_id} = this.state;
         const authId = localStorage.getItem('id');
-        console.log('url, auth', url_id, authId)
         return (
             <div >
                 <Navbar />

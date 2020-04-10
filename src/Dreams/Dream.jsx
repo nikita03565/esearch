@@ -91,8 +91,6 @@ class Dream extends Component {
         const user_id = user ? user.id : 0;
         const user_username = user ? user.username : '';
         const authId = Number(localStorage.getItem('id'));
-        console.log('STATE', this.state)
-        console.log(user_id, authId)
         let buttonText = '';
         if (creating) {
             buttonText = 'Создать'
@@ -101,7 +99,6 @@ class Dream extends Component {
         } else {
             buttonText = 'Редактировать'
         }
-        console.log(creating, editing, buttonText)
         return (
             <div style={{
                 display: 'flex',
