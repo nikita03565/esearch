@@ -23,6 +23,7 @@ class UserDetail extends Component {
         username: "",
         detail: true,
         editing: false,
+        creating: false,
         countryInput: '',
         cityInput: '',
         districtInput: '',

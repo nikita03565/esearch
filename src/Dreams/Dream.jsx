@@ -15,6 +15,7 @@ class Dream extends Component {
         user: null,
         errorText: '',
         editing: false,
+        creating: false,
     }
 
     componentDidMount() {
@@ -27,9 +28,11 @@ class Dream extends Component {
     };
 
     onEditButtonClick = () => {
-        const {editing} = this.state;
+        const {editing, creating} = this.state;
         if (editing) {
             this.onUpdateDream();
+        } if (creating) {
+            this.onAddDream();
         } else {
             this.setState({
                 editing: true,
@@ -37,16 +40,13 @@ class Dream extends Component {
         }
     };
 
-    onAddDream = async () => {
+    onAddDream = () => {
         try {
             const {
                 name, description,
             } = this.state;
-            const data = {
-                name,
-                description,
-            };
-            await addEl('desires', data);
+            const {addDream} = this.props;
+            addDream(name, description);
             this.setState({editing: false})
         } catch (err) {
             console.log(err);
@@ -81,19 +81,38 @@ class Dream extends Component {
         }
     };
 
+    onDeleteDream = (id) => {
+        const {deleteDream} = this.props;
+        deleteDream(id);
+    }
+
     render() {
-        const {name, description, editing, user} = this.state;
+        const {id, name, description, editing, creating, user} = this.state;
         const user_id = user ? user.id : 0;
         const authId = Number(localStorage.getItem('id'));
         console.log('STATE', this.state)
         console.log(user_id, authId)
-        
+        let buttonText = '';
+        if (creating) {
+            buttonText = 'Создать'
+        } else if (editing) {
+            buttonText = 'Завершить'
+        } else {
+            buttonText = 'Редактировать'
+        }
+        console.log(creating, editing, buttonText)
         return (
-            <div>
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                alignContent: 'center',
+                justifyContent: 'center',
+                overflow: 'auto',
+            }}>
                 <Card style={{margin: '10px', minWidth: '1000px', maxWidth: '1000px'}}>
                     <CardContent>
                         {
-                            editing ? (
+                            editing || creating ? (
                                 <Fragment>
                                     <TextField
                                         label="Название"
@@ -117,15 +136,28 @@ class Dream extends Component {
                             )
                         }
                         {
-                            Number(user_id) === Number(authId) &&
-                            <Button
-                                style={{minWidth: '151px'}}
-                                color={editing ? 'primary' : 'default'}
-                                variant="contained"
-                                onClick={this.onEditButtonClick}
-                            >
-                                {editing ? 'Завершить' : 'Редактировать'}
-                            </Button>
+                            Number(user_id) === Number(authId) && (
+                                <Fragment>
+                                    <Button
+                                        style={{minWidth: '151px'}}
+                                        color={editing ? 'primary' : 'default'}
+                                        variant="contained"
+                                        onClick={this.onEditButtonClick}
+                                    >
+                                        {buttonText}
+                                    </Button>
+                                    {!creating &&
+                                    <Button
+                                        style={{minWidth: '151px'}}
+                                        color={editing ? 'primary' : 'default'}
+                                        variant="contained"
+                                        onClick={(() => this.onDeleteDream(id))}
+                                    >
+                                        Удалить
+                                    </Button>
+                                    }
+                                </Fragment>
+                            )
                         }
                     </CardContent>
                 </Card>
