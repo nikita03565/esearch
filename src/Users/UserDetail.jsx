@@ -64,7 +64,14 @@ class UserDetail extends Component {
     onLoadUser = async (url) => {
         try {
             const res = await loadData(url);
-            this.setState({...res.data, detail: true})
+            this.setState({
+                ...res.data,
+                detail: true,
+                social_media_links: res.data.social_media_links || [],
+                phone_number: res.data.phone_number || '',
+                bio: res.data.bio || '',
+                date_of_birth: res.data.date_of_birth || '',
+                })
         } catch (err) {
             console.log(err);
             console.log(err.response);
@@ -102,7 +109,7 @@ class UserDetail extends Component {
             const locationData = this.createLocationData();
             const data = {
                 bio,
-                date_of_birth,
+                date_of_birth: date_of_birth !== '' ? date_of_birth : null,
                 email,
                 location: locationData,
                 phone_number,
