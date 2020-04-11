@@ -151,6 +151,7 @@ class Dream extends Component {
                                         autoComplete={true}
                                         freeSolo={true}
                                         options={suggestions}
+                                        value={{id: name, label: name}}
                                         getOptionLabel={(option) => option.label}
                                         onInputChange={(e, value) => this.handleChangeAuto(value, 'name')}
                                         style={{ width: 300 }}
@@ -158,6 +159,7 @@ class Dream extends Component {
                                             <TextField
                                                 {...params}
                                                 label="Название"
+                                                value={name}
                                                 onChange={e => this.handleChange(e, 'name')}
                                             />)}
                                     />
@@ -185,6 +187,7 @@ class Dream extends Component {
                                         color={editing ? 'primary' : 'default'}
                                         variant="contained"
                                         onClick={this.onEditButtonClick}
+                                        disabled={!name}
                                     >
                                         {buttonText}
                                     </Button>
