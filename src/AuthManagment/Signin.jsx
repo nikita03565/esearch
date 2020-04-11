@@ -9,7 +9,6 @@ import parseErrors from '../parseErrors';
 
 class Signin extends Component {
     constructor() {
-        console.log('HM???')
         super();
         this.handleChange = this.handleChange.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -46,7 +45,6 @@ class Signin extends Component {
     }
 
     render() {
-        console.log('RENDER?')
         const { errorText, username, password } = this.state;
         return (
             <div>

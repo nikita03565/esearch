@@ -22,7 +22,6 @@ class Search extends Component {
         try {
             const {suggestTerm} = this.state;
             const res = await suggestDreams('name', suggestTerm);
-            console.log(res.data.name_suggest__completion[0].options)
             const suggestions = res.data.name_suggest__completion[0].options.map(suggestion => suggestion.text)
             this.setState({suggestions})
         } catch (err) {

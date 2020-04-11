@@ -16,14 +16,12 @@ class Users extends Component {
     async onLoadAllUsers() {
         try {
             const res = await loadData('users');
-            const aaa = res.data.map(user => <UserDetail data={user}/>)
-            console.log('aaa', aaa)
             this.setState({
                 users: res.data,
             });
-            console.log(res.data)
         } catch (err) {
             console.log(err)
+            console.log(err.response)
             if (axios.isCancel(err)) {
                 return;
             }

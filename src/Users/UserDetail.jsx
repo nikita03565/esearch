@@ -64,10 +64,10 @@ class UserDetail extends Component {
     onLoadUser = async (url) => {
         try {
             const res = await loadData(url);
-            console.log(res.data);
             this.setState({...res.data, detail: true})
         } catch (err) {
             console.log(err);
+            console.log(err.response);
             if (axios.isCancel(err)) {
 
             }
@@ -294,8 +294,6 @@ class UserDetail extends Component {
             streetInput, buildingInput, apartmentInput, errorText,
         } = this.state;
         const authId = localStorage.getItem('id');
-        console.log(authId, id)
-        console.log('in render', errorText);
         return (
             <div>
                 {detail && <Navbar/>}
