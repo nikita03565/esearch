@@ -11,6 +11,8 @@ class Dream extends Component {
         id: null,
         name: '',
         description: '',
+        nameDefault: '',
+        descriptionDefault: '',
         user: null,
         errorText: '',
         editing: false,
@@ -20,7 +22,7 @@ class Dream extends Component {
 
     componentDidMount() {
         const {data} = this.props;
-        this.setState({...data})
+        this.setState({...data, nameDefault: data.name, descriptionDefault: data.description})
     }
 
     handleChange = (e, field) => {
@@ -71,6 +73,11 @@ class Dream extends Component {
             })
         }
     };
+
+    onCancelButtonClick = () => {
+        const {nameDefault, descriptionDefault} = this.state;
+        this.setState({editing: false, name: nameDefault, description: descriptionDefault})
+    }
 
     onAddDream = () => {
         try {
@@ -171,6 +178,14 @@ class Dream extends Component {
                                         fullWidth
                                         onChange={e => this.handleChange(e, 'description')}
                                     />
+                                    <Button
+                                        style={{minWidth: '151px'}}
+                                        color={editing ? 'primary' : 'default'}
+                                        variant="contained"
+                                        onClick={this.onCancelButtonClick}
+                                    >
+                                        Отменить
+                                    </Button>
                                 </Fragment>
                             ) : (
                                 <Fragment>
