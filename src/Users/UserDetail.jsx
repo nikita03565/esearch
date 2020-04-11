@@ -38,7 +38,8 @@ class UserDetail extends Component {
         if (data) {
             this.setState({...data, detail: false});
         } else if (match) {
-            this.onLoadUser(match.url);
+            const url = `users/${match.params.id}`
+            this.onLoadUser(url);
         }
     }
 
