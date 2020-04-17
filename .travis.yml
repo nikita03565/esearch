@@ -24,7 +24,9 @@ before_script:
   - python manage.py makemigrations
   - python manage.py migrate
 script:
-  - python manage.py test
+  - coverage run --source='.' --omit=*venv* manage.py test core
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: heroku
   api_key:
